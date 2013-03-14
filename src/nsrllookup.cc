@@ -109,8 +109,6 @@ int main(int argc, char* argv[])
         // actually be removed, I think...
     }
 
-    std::cerr << "buffer size: " << buffer.size() << "\n";
-
     if (REPORT_STATUS || 0 < buffer.size()) {
         query_server(buffer);
         buffer.clear();
