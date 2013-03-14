@@ -27,7 +27,7 @@
 #include <windows.h>
 
 #define OPERATING_SYSTEM "Windows"
-#define PACKAGE_VERSION "1.2"
+#define PACKAGE_VERSION "1.2.2"
 
 class NetworkSocket
 {

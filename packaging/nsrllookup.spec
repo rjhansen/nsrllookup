@@ -1,5 +1,5 @@
 Name:		nsrllookup
-Version:	1.2
+Version:	1.2.2
 Release:	1%{?dist}
 Summary:	provides an interface to NSRL RDS servers
 
@@ -39,6 +39,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 13 2013 Robert J. Hansen <rjh@sixdemonbag.org> 1.2.2
 - Introduced a new flag, -S, to query the nsrlserver's status.
 
 * Mon Jan 30 2012 Robert J. Hansen <rjh@secret-alchemy.com> 1.11
