@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Nsrllookup by rjhansen</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Nsrllookup</h1>
+        <p></p>
+
+        <p class="view"><a href="https://github.com/rjhansen/nsrllookup">View the Project on GitHub <small>rjhansen/nsrllookup</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/rjhansen/nsrllookup/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/rjhansen/nsrllookup/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/rjhansen/nsrllookup">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>nsrllookup</h1>
+
+<p>The latest release is 1.2, available in both <a href="https://github.com/rjhansen/nsrllookup/archive/1.2.tar.gz">source code</a> and as a <a href="http://sixdemonbag.org/nsrlquery/nsrllookup-1.2-win32.zip">Windows binary</a>.</p>
+
+<h2>What's nsrllookup?</h2>
+
+<p>NIST publishes a giant compendium of MD5 and SHA-1 hashes of known pieces of software.  This volume, the National Software Reference Library Reference Data Set (NSRL RDS), is invaluable for computer forensics.  Often when faced with a needle-in-a-haystack problem, it's a tremendous help to be able to immediately categorize data into "NIST knows about this" and "it's unknown to NIST."</p>
+
+<p>Unfortunately, the NSRL RDS is a couple of gigs in size and doesn't have any good querying tools.  This is where nsrlsvr and nsrllookup come into play -- or collectively, "the nsrlquery tools."</p>
+
+<h3>nsrlsvr</h3>
+
+<p>nsrlsvr lets a system administrator stand up a server to support NSRL queries.  On top of that, an admin can add additional hashes to the NSRL RDS list.  For instance, if you have a set of images you're particularly interested in finding, you can compute hashes of the images and add them to the dataset.  Now you can query nsrlsvr to find out "is it known to either NIST or our own local corpus?"</p>
+
+<h3>nsrllookup</h3>
+
+<p>nsrllookup is how end-users interact with nsrlsvr.  It's designed to be a well-behaved command-line application, and works hand-in-glove with tools like <a href="http://md5deep.sourceforge.net">hashdeep</a>.  For instance, to hash everything in /mount/evil-data and compare it against the NSRL RDS using Kyrus' publicly-accessible nsrlsvr instance, printing out those things that are unknown to NIST:</p>
+
+<p>md5deep -r /mount/evil-data | nsrllookup -s nsrl.kyr.us</p>
+
+<p>It doesn't get much simpler than that.</p>
+
+<p>I hope you like nsrllookup.  If you have bugs, suggestions or praise, please feel free to <a href="mailto:rjh@sixdemonbag.org?subject=nsrllookup%201.2">email me</a>.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/rjhansen">rjhansen</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
