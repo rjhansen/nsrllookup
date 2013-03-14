@@ -51,8 +51,8 @@ bool is_valid(const string& line)
     string::iterator siter(hash.begin());
 
     for (siter = hash.begin() ; siter != hash.end() ; ++siter)
-        if (! ((*siter >= '0' && *siter <= '9') or
-            (*siter >= 'A' && *siter <= 'F') or
+        if (! ((*siter >= '0' && *siter <= '9') ||
+            (*siter >= 'A' && *siter <= 'F') ||
             (*siter >= 'a' && *siter <= 'f')))
             return false;
 
