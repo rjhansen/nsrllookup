@@ -4,8 +4,8 @@ Release:	1%{?dist}
 Summary:	provides an interface to NSRL RDS servers
 
 License:	ISC
-URL:		http://nsrlquery.sourceforge.net
-Source0:	nsrllookup-1.2.tar.gz
+URL:		http://rjhansen.github.com/nsrllookup
+Source0:	nsrllookup-1.2.2.tar.gz
 
 BuildRequires:	gcc-c++
 Requires:	libstdc++
