@@ -35,7 +35,7 @@ void show_version()
     std::cerr <<
               "nsrllookup for " OPERATING_SYSTEM " version " PACKAGE_VERSION "\n\n"
               "The latest version can be found at:\n"
-      "        https://rjhansen.github.com/nsrllookup\n\n";
+      "        http://rjhansen.github.com/nsrllookup\n\n";
     bomb(0);
 }
 
@@ -61,7 +61,7 @@ void show_help()
               "may have useful information.\n\n"
 #endif
               "The latest version can be found at:\n"
-              "        https://rjhansen.github.com/nsrllookup\n\n";
+              "        http://rjhansen.github.com/nsrllookup\n\n";
     bomb(0);
 }
 
