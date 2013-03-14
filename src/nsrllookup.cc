@@ -23,6 +23,7 @@ using std::find;
 using std::remove;
 using std::ofstream;
 using std::cin;
+using std::auto_ptr;
 
 string SERVER("localhost");
 bool SCORE_HITS(false); // score misses
@@ -35,28 +36,27 @@ NetworkSocket* GLOBAL_SOCK(0);
 namespace {
 bool is_valid(const string& line)
 {
-    vector<string>* tokens = tokenize(line);
-    string::iterator siter;
-    bool rv = false;
-    if ((tokens->size() < 1) ||
-            (tokens->at(0).size() != 32 && tokens->at(0).size() != 40))
-        goto IS_VALID_BAIL;
+    auto_ptr<vector<string> > tokens(tokenize(line));
+    size_t token_count(tokens->size());
 
-    for (siter = tokens->at(0).begin() ;
-            siter != tokens->at(0).end() ; ++
-            ++siter)
-        if (! ((*siter >= '0' && *siter <= '9') ||
-                (*siter >= 'A' && *siter <= 'F') ||
-                (*siter >= 'a' && *siter <= 'f')))
-            goto IS_VALID_BAIL;
+    if (token_count < 1)
+        return false;
+    
+    string& hash(tokens->at(0));
+    size_t hash_length(hash.size());
 
-    rv = true;
+    if (hash_length != 32 and hash_length != 40 and hash_length != 64)
+        return false;
 
-IS_VALID_BAIL:
-    if (0 != tokens) {
-        delete tokens;
-    }
-    return rv;
+    string::iterator siter(hash.begin());
+
+    for (siter = hash.begin() ; siter != hash.end() ; ++siter)
+        if (! ((*siter >= '0' and *siter <= '9') or
+            (*siter >= 'A' and *siter <= 'F') or
+            (*siter >= 'a' and *siter <= 'f')))
+            return false;
+
+    return true;
 }
 }
 
@@ -108,6 +108,9 @@ int main(int argc, char* argv[])
         // pass: this is entirely expected.  Uh, well, maybe.  It should
         // actually be removed, I think...
     }
+
+    std::cerr << "buffer size: " << buffer.size() << "\n";
+
     if (REPORT_STATUS or 0 < buffer.size()) {
         query_server(buffer);
         buffer.clear();

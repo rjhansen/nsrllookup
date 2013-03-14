@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <exception>
+#include <memory>
 
 void bomb(int code);
 int query_server_status();

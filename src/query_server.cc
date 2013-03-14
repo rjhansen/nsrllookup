@@ -16,10 +16,6 @@
 
 
 #include "common.hpp"
-#include <vector>
-#include <string>
-#include <memory>
-#include <exception>
 
 using std::string;
 using std::vector;
