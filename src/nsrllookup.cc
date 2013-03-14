@@ -45,15 +45,15 @@ bool is_valid(const string& line)
     string& hash(tokens->at(0));
     size_t hash_length(hash.size());
 
-    if (hash_length != 32 and hash_length != 40 and hash_length != 64)
+    if (hash_length != 32 && hash_length != 40 && hash_length != 64)
         return false;
 
     string::iterator siter(hash.begin());
 
     for (siter = hash.begin() ; siter != hash.end() ; ++siter)
-        if (! ((*siter >= '0' and *siter <= '9') or
-            (*siter >= 'A' and *siter <= 'F') or
-            (*siter >= 'a' and *siter <= 'f')))
+        if (! ((*siter >= '0' && *siter <= '9') or
+            (*siter >= 'A' && *siter <= 'F') or
+            (*siter >= 'a' && *siter <= 'f')))
             return false;
 
     return true;
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 
     std::cerr << "buffer size: " << buffer.size() << "\n";
 
-    if (REPORT_STATUS or 0 < buffer.size()) {
+    if (REPORT_STATUS || 0 < buffer.size()) {
         query_server(buffer);
         buffer.clear();
     }

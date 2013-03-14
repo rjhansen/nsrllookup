@@ -118,7 +118,7 @@ string make_query(const vector<string>& buffer)
 
 void query_handler(const vector<string>& buffer)
 {
-    if (buffer.empty() or 0 == GLOBAL_SOCK)
+    if (buffer.empty() || 0 == GLOBAL_SOCK)
         return;
 
     try {
@@ -185,7 +185,7 @@ int query_server_status()
         GLOBAL_SOCK->write("STATUS\r\n");
         auto_ptr<VS> tokens(tokenize(GLOBAL_SOCK->read_line()));
 
-        if (tokens->size() and tokens->at(0) == "NOT") {
+        if (tokens->size() && tokens->at(0) == "NOT") {
             std::cerr << "Server does not support status queries.\n";
             rv = -7;
         } else if (tokens->size() < 8) {
