@@ -95,6 +95,8 @@ am_nsrllookup_OBJECTS = nsrllookup-nsrllookup.$(OBJEXT) \
 	nsrllookup-query_server.$(OBJEXT)
 nsrllookup_OBJECTS = $(am_nsrllookup_OBJECTS)
 nsrllookup_LDADD = $(LDADD)
+nsrllookup_LINK = $(CXXLD) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -249,6 +251,7 @@ top_srcdir = @top_srcdir@
 EXTRA_DIST = common.hpp win32.hpp unix.hpp README.W32
 nsrllookup_SOURCES = nsrllookup.cc common.cc parse_options.cc query_server.cc
 nsrllookup_CPPFLAGS = -DPKGDATADIR="\"$(pkgdatadir)\"" -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" -DPACKAGE_URL="\"$(PACKAGE_URL)\"" -DPACKAGE_BUGREPORT="\"$(PACKAGE_BUGREPORT)\""
+nsrllookup_CXXFLAGS = --std=c++11
 all: all-am
 
 .SUFFIXES:
@@ -328,7 +331,7 @@ clean-binPROGRAMS:
 
 nsrllookup$(EXEEXT): $(nsrllookup_OBJECTS) $(nsrllookup_DEPENDENCIES) $(EXTRA_nsrllookup_DEPENDENCIES) 
 	@rm -f nsrllookup$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(nsrllookup_OBJECTS) $(nsrllookup_LDADD) $(LIBS)
+	$(AM_V_CXXLD)$(nsrllookup_LINK) $(nsrllookup_OBJECTS) $(nsrllookup_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -356,60 +359,60 @@ distclean-compile:
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 nsrllookup-nsrllookup.o: nsrllookup.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-nsrllookup.o -MD -MP -MF $(DEPDIR)/nsrllookup-nsrllookup.Tpo -c -o nsrllookup-nsrllookup.o `test -f 'nsrllookup.cc' || echo '$(srcdir)/'`nsrllookup.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-nsrllookup.o -MD -MP -MF $(DEPDIR)/nsrllookup-nsrllookup.Tpo -c -o nsrllookup-nsrllookup.o `test -f 'nsrllookup.cc' || echo '$(srcdir)/'`nsrllookup.cc
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/nsrllookup-nsrllookup.Tpo $(DEPDIR)/nsrllookup-nsrllookup.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='nsrllookup.cc' object='nsrllookup-nsrllookup.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-nsrllookup.o `test -f 'nsrllookup.cc' || echo '$(srcdir)/'`nsrllookup.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-nsrllookup.o `test -f 'nsrllookup.cc' || echo '$(srcdir)/'`nsrllookup.cc
 
 nsrllookup-nsrllookup.obj: nsrllookup.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-nsrllookup.obj -MD -MP -MF $(DEPDIR)/nsrllookup-nsrllookup.Tpo -c -o nsrllookup-nsrllookup.obj `if test -f 'nsrllookup.cc'; then $(CYGPATH_W) 'nsrllookup.cc'; else $(CYGPATH_W) '$(srcdir)/nsrllookup.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-nsrllookup.obj -MD -MP -MF $(DEPDIR)/nsrllookup-nsrllookup.Tpo -c -o nsrllookup-nsrllookup.obj `if test -f 'nsrllookup.cc'; then $(CYGPATH_W) 'nsrllookup.cc'; else $(CYGPATH_W) '$(srcdir)/nsrllookup.cc'; fi`
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/nsrllookup-nsrllookup.Tpo $(DEPDIR)/nsrllookup-nsrllookup.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='nsrllookup.cc' object='nsrllookup-nsrllookup.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-nsrllookup.obj `if test -f 'nsrllookup.cc'; then $(CYGPATH_W) 'nsrllookup.cc'; else $(CYGPATH_W) '$(srcdir)/nsrllookup.cc'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-nsrllookup.obj `if test -f 'nsrllookup.cc'; then $(CYGPATH_W) 'nsrllookup.cc'; else $(CYGPATH_W) '$(srcdir)/nsrllookup.cc'; fi`
 
 nsrllookup-common.o: common.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-common.o -MD -MP -MF $(DEPDIR)/nsrllookup-common.Tpo -c -o nsrllookup-common.o `test -f 'common.cc' || echo '$(srcdir)/'`common.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-common.o -MD -MP -MF $(DEPDIR)/nsrllookup-common.Tpo -c -o nsrllookup-common.o `test -f 'common.cc' || echo '$(srcdir)/'`common.cc
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/nsrllookup-common.Tpo $(DEPDIR)/nsrllookup-common.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='common.cc' object='nsrllookup-common.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-common.o `test -f 'common.cc' || echo '$(srcdir)/'`common.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-common.o `test -f 'common.cc' || echo '$(srcdir)/'`common.cc
 
 nsrllookup-common.obj: common.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-common.obj -MD -MP -MF $(DEPDIR)/nsrllookup-common.Tpo -c -o nsrllookup-common.obj `if test -f 'common.cc'; then $(CYGPATH_W) 'common.cc'; else $(CYGPATH_W) '$(srcdir)/common.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-common.obj -MD -MP -MF $(DEPDIR)/nsrllookup-common.Tpo -c -o nsrllookup-common.obj `if test -f 'common.cc'; then $(CYGPATH_W) 'common.cc'; else $(CYGPATH_W) '$(srcdir)/common.cc'; fi`
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/nsrllookup-common.Tpo $(DEPDIR)/nsrllookup-common.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='common.cc' object='nsrllookup-common.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-common.obj `if test -f 'common.cc'; then $(CYGPATH_W) 'common.cc'; else $(CYGPATH_W) '$(srcdir)/common.cc'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-common.obj `if test -f 'common.cc'; then $(CYGPATH_W) 'common.cc'; else $(CYGPATH_W) '$(srcdir)/common.cc'; fi`
 
 nsrllookup-parse_options.o: parse_options.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-parse_options.o -MD -MP -MF $(DEPDIR)/nsrllookup-parse_options.Tpo -c -o nsrllookup-parse_options.o `test -f 'parse_options.cc' || echo '$(srcdir)/'`parse_options.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-parse_options.o -MD -MP -MF $(DEPDIR)/nsrllookup-parse_options.Tpo -c -o nsrllookup-parse_options.o `test -f 'parse_options.cc' || echo '$(srcdir)/'`parse_options.cc
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/nsrllookup-parse_options.Tpo $(DEPDIR)/nsrllookup-parse_options.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='parse_options.cc' object='nsrllookup-parse_options.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-parse_options.o `test -f 'parse_options.cc' || echo '$(srcdir)/'`parse_options.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-parse_options.o `test -f 'parse_options.cc' || echo '$(srcdir)/'`parse_options.cc
 
 nsrllookup-parse_options.obj: parse_options.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-parse_options.obj -MD -MP -MF $(DEPDIR)/nsrllookup-parse_options.Tpo -c -o nsrllookup-parse_options.obj `if test -f 'parse_options.cc'; then $(CYGPATH_W) 'parse_options.cc'; else $(CYGPATH_W) '$(srcdir)/parse_options.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-parse_options.obj -MD -MP -MF $(DEPDIR)/nsrllookup-parse_options.Tpo -c -o nsrllookup-parse_options.obj `if test -f 'parse_options.cc'; then $(CYGPATH_W) 'parse_options.cc'; else $(CYGPATH_W) '$(srcdir)/parse_options.cc'; fi`
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/nsrllookup-parse_options.Tpo $(DEPDIR)/nsrllookup-parse_options.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='parse_options.cc' object='nsrllookup-parse_options.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-parse_options.obj `if test -f 'parse_options.cc'; then $(CYGPATH_W) 'parse_options.cc'; else $(CYGPATH_W) '$(srcdir)/parse_options.cc'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-parse_options.obj `if test -f 'parse_options.cc'; then $(CYGPATH_W) 'parse_options.cc'; else $(CYGPATH_W) '$(srcdir)/parse_options.cc'; fi`
 
 nsrllookup-query_server.o: query_server.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-query_server.o -MD -MP -MF $(DEPDIR)/nsrllookup-query_server.Tpo -c -o nsrllookup-query_server.o `test -f 'query_server.cc' || echo '$(srcdir)/'`query_server.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-query_server.o -MD -MP -MF $(DEPDIR)/nsrllookup-query_server.Tpo -c -o nsrllookup-query_server.o `test -f 'query_server.cc' || echo '$(srcdir)/'`query_server.cc
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/nsrllookup-query_server.Tpo $(DEPDIR)/nsrllookup-query_server.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='query_server.cc' object='nsrllookup-query_server.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-query_server.o `test -f 'query_server.cc' || echo '$(srcdir)/'`query_server.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-query_server.o `test -f 'query_server.cc' || echo '$(srcdir)/'`query_server.cc
 
 nsrllookup-query_server.obj: query_server.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-query_server.obj -MD -MP -MF $(DEPDIR)/nsrllookup-query_server.Tpo -c -o nsrllookup-query_server.obj `if test -f 'query_server.cc'; then $(CYGPATH_W) 'query_server.cc'; else $(CYGPATH_W) '$(srcdir)/query_server.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -MT nsrllookup-query_server.obj -MD -MP -MF $(DEPDIR)/nsrllookup-query_server.Tpo -c -o nsrllookup-query_server.obj `if test -f 'query_server.cc'; then $(CYGPATH_W) 'query_server.cc'; else $(CYGPATH_W) '$(srcdir)/query_server.cc'; fi`
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/nsrllookup-query_server.Tpo $(DEPDIR)/nsrllookup-query_server.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='query_server.cc' object='nsrllookup-query_server.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-query_server.obj `if test -f 'query_server.cc'; then $(CYGPATH_W) 'query_server.cc'; else $(CYGPATH_W) '$(srcdir)/query_server.cc'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(nsrllookup_CPPFLAGS) $(CPPFLAGS) $(nsrllookup_CXXFLAGS) $(CXXFLAGS) -c -o nsrllookup-query_server.obj `if test -f 'query_server.cc'; then $(CYGPATH_W) 'query_server.cc'; else $(CYGPATH_W) '$(srcdir)/query_server.cc'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

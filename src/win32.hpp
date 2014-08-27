@@ -22,12 +22,12 @@
 
 #undef UNICODE
 
-#include <WinSock2.h>
-#include <WS2tcpip.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #include <windows.h>
 
 #define OPERATING_SYSTEM "Windows"
-#define PACKAGE_VERSION "1.2.2"
+#define PACKAGE_VERSION "1.2.3"
 
 class NetworkSocket
 {

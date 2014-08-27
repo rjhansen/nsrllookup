@@ -19,7 +19,7 @@
 
 using std::string;
 using std::vector;
-using std::auto_ptr;
+using std::unique_ptr;
 using std::ofstream;
 
 extern string SERVER;
@@ -58,7 +58,7 @@ public:
 
 void write_output(const vector<string>& buffer, const string& result_line)
 {
-    auto_ptr<VS> tokens(tokenize(result_line));
+    unique_ptr<VS> tokens(tokenize(result_line));
     if (tokens->empty())
         return;
 
@@ -91,7 +91,7 @@ void handshake(NetworkSocket* sock, string version)
 {
     version = "Version: " + version + "\r\n";
     sock->write(version.c_str());
-    auto_ptr<VS> tokens(tokenize(sock->read_line()));
+    unique_ptr<VS> tokens(tokenize(sock->read_line()));
     if (tokens->size() == 0 || tokens->at(0) != "OK") {
         throw BadHandshake();
     }
@@ -106,7 +106,7 @@ string make_query(const vector<string>& buffer)
     }
 
     for (size_t idx = 0 ; idx < buffer.size() ; ++idx) {
-        auto_ptr<VS> tokens(tokenize(buffer.at(idx)));
+        unique_ptr<VS> tokens(tokenize(buffer.at(idx)));
         rv += " " + tokens->at(0);
     }
 
@@ -183,7 +183,7 @@ int query_server_status()
             handshake(GLOBAL_SOCK, "2.0");
         }
         GLOBAL_SOCK->write("STATUS\r\n");
-        auto_ptr<VS> tokens(tokenize(GLOBAL_SOCK->read_line()));
+        unique_ptr<VS> tokens(tokenize(GLOBAL_SOCK->read_line()));
 
         if (tokens->size() && tokens->at(0) == "NOT") {
             std::cerr << "Server does not support status queries.\n";
