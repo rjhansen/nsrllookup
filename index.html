@@ -37,6 +37,11 @@
 <p>The latest release is 1.2.3, available as <a href="https://github.com/rjhansen/nsrllookup/archive/v1.2.3.tar.gz">source code</a>.  Version 1.2.2 is available as Windows binaries (<a href="http://sixdemonbag.org/nsrlquery/nsrllookup-1.2.2-win32.zip">32-bit</a> and <a href="http://sixdemonbag.org/nsrlquery/nsrllookup-1.2.2-win64.zip">64-bit</a>).</p>
 
 <h2>
+<a name="news" class="anchor" href="#news"><span class="octicon octicon-link"></span></a>News</h2>
+
+<p>nsrllookup depends on the existence of an NSRL lookup server.  For a couple of years Kyrus Technologies provided one, but that's no more.  (No slight on them: thanks, guys, for all the time you supported nsrllookup!)  A new publicly available NSRL lookup server has been stood up at nsrllookup.com.</p>
+
+<h2>
 <a name="whats-nsrllookup" class="anchor" href="#whats-nsrllookup"><span class="octicon octicon-link"></span></a>What's nsrllookup?</h2>
 
 <p>NIST publishes a giant compendium of MD5 and SHA-1 hashes of known pieces of software.  This volume, the National Software Reference Library Reference Data Set (NSRL RDS), is invaluable for computer forensics.  Often when faced with a needle-in-a-haystack problem, it's a tremendous help to be able to immediately categorize data into "NIST knows about this" and "it's unknown to NIST."</p>
@@ -51,9 +56,9 @@
 <h3>
 <a name="nsrllookup-1" class="anchor" href="#nsrllookup-1"><span class="octicon octicon-link"></span></a>nsrllookup</h3>
 
-<p>nsrllookup is how end-users interact with nsrlsvr.  It's designed to be a well-behaved command-line application, and works hand-in-glove with tools like <a href="http://md5deep.sourceforge.net">hashdeep</a>.  For instance, to hash everything in /mount/evil-data and compare it against the NSRL RDS using Kyrus' publicly-accessible nsrlsvr instance, printing out those things that are unknown to NIST:</p>
+<p>nsrllookup is how end-users interact with nsrlsvr.  It's designed to be a well-behaved command-line application, and works hand-in-glove with tools like <a href="http://md5deep.sourceforge.net">hashdeep</a>.  For instance, to hash everything in /mount/evil-data and compare it against the NSRL RDS using the publicly-accessible nsrlsvr instance at nsrllookup.com, printing out those things that are unknown to NIST:</p>
 
-<p>md5deep -r /mount/evil-data | nsrllookup -s nsrl.kyr.us</p>
+<p>md5deep -r /mount/evil-data | nsrllookup</p>
 
 <h3>
 <a name="how-do-i-get-help" class="anchor" href="#how-do-i-get-help"><span class="octicon octicon-link"></span></a>How do I get help?</h3>
