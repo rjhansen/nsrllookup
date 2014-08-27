@@ -1,3 +1,7 @@
+1.2.3: August 27, 2014
+    * Updated to no longer refer to the now-defunct nsrl.kyr.us.
+    * Now defaults to using nsrllookup.com
+
 1.1-2: January 31, 2012
     * Added a Red Hat spec file, one that *should* work (knock on
       wood!) with OpenSUSE.

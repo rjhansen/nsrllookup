@@ -25,7 +25,7 @@ using std::ofstream;
 using std::cin;
 using std::auto_ptr;
 
-string SERVER("localhost");
+string SERVER("nsrllookup.com");
 bool SCORE_HITS(false); // score misses
 bool REPORT_STATUS(false); // report server status
 int PORT(9120);

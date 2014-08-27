@@ -1,5 +1,5 @@
 AC_PREREQ(2.61)
-AC_INIT([NSRL Lookup], [1.2.2], [Robert J. Hansen <rjh@secret-alchemy.com>], [nsrllookup], [http://rjhansen.github.com/nsrllookup])
+AC_INIT([NSRL Lookup], [1.2.3], [Robert J. Hansen <rjh@secret-alchemy.com>], [nsrllookup], [http://rjhansen.github.com/nsrllookup])
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_SRCDIR([src/nsrllookup.cc])
 AC_CONFIG_HEADER([config.h])
