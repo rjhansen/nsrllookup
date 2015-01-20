@@ -73,8 +73,7 @@ public:
 
     virtual ~NetworkSocket()
     {
-        if (sock > 0)
-            shutdown(sock, SHUT_RDWR);
+        if (sock > 0) close(sock);
     }
 
     void write(const std::string& line)

@@ -79,7 +79,9 @@ int main(int argc, char* argv[])
     parse_options(argc, argv);
 
     if (REPORT_STATUS) {
-        bomb(query_server_status());
+        int rv = query_server_status();
+        end_connection();
+        bomb(rv);
     }
     
     try {
