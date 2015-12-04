@@ -44,7 +44,7 @@ void show_help()
     std::cerr <<
               "nsrllookup for " OPERATING_SYSTEM " version " PACKAGE_VERSION "\n"
               "\n"
-              "nsrllookup [-hvukxS] [-U FILE] [-K FILE] [-s SERVER] [-p PORT]\n"
+              "nsrllookup [-hvukS] [-U FILE] [-K FILE] [-s SERVER] [-p PORT]\n"
               "\n"
               "        -h: display this help message\n"
               "        -v: display version information\n"

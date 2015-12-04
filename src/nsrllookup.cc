@@ -23,7 +23,7 @@ using std::find;
 using std::remove;
 using std::ofstream;
 using std::cin;
-using std::auto_ptr;
+using std::unique_ptr;
 
 string SERVER("nsrllookup.com");
 bool SCORE_HITS(false); // score misses
@@ -36,7 +36,7 @@ NetworkSocket* GLOBAL_SOCK(0);
 namespace {
 bool is_valid(const string& line)
 {
-    auto_ptr<vector<string> > tokens(tokenize(line));
+    unique_ptr<vector<string> > tokens(tokenize(line));
     size_t token_count(tokens->size());
 
     if (token_count < 1)
