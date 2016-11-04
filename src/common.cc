@@ -54,7 +54,7 @@ vector<string> tokenize(const string& line, const char delim)
 }
 
 /* This abomination comes to you courtesy of the Win32 API. */
-noreturn void bomb(int code)
+void bomb(int code)
 {
 #ifdef WINDOWS
     WSACleanup();
