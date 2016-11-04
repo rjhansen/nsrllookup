@@ -1,5 +1,4 @@
-/* $Id: win32.hpp 105 2012-01-30 08:08:50Z rjh $
- * Copyright (c) 2012, Robert J. Hansen <rjh@secret-alchemy.com>
+/* Copyright (c) 2012-16, Robert J. Hansen <rob@hansen.engineering>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above

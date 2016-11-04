@@ -1,5 +1,4 @@
-/* $Id: query_server.cc 123 2012-02-08 16:43:07Z rjh $
- * Copyright (c) 2012, Robert J. Hansen <rjh@secret-alchemy.com>
+/* Copyright (c) 2012-16, Robert J. Hansen <rob@hansen.engineering>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
