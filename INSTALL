@@ -1,9 +1,0 @@
-Installation follows the same './configure && make && make install'
-dance you're used to.  There should be no real surprises here.
-
-Although I aim for zero-warning builds, each compiler and each
-operating system are different.  (For instance, Ubuntu Linux's GCC
-package issues a lot more warnings than Fedora's.)  If you find any
-warnings please tell me about them, as well as what operating system
-and compiler you're using.
-

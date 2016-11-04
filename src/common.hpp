@@ -25,8 +25,9 @@
 #include <cstdlib>
 #include <exception>
 #include <memory>
+#include <cstdint>
 
-void bomb(int code);
+void bomb(uint16_t code);
 int query_server_status();
 
 class NetworkError : public std::exception {
@@ -49,8 +50,8 @@ public:
 };
 
 void parse_options(int argc, char** argv);
-std::vector<std::string>* tokenize(const std::string& line,
-                                   const char delim = ' ');
+std::unique_ptr<std::vector<std::string>> tokenize(const std::string& line,
+						   const char delim = ' ');
 void query_server(const std::vector<std::string>& buffer);
 void end_connection();
 

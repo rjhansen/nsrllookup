@@ -1,7 +1,0 @@
-Jesse Kornblum <jessekornblum@gmail.com>
-  - The original idea for nsrlsvr and nsrllookup
-
-Adrian Preston <maekern@gmail.com>
-  - Found a critical bug in the Win32 version related to I/O 
-    redirection
-

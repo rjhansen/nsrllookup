@@ -24,16 +24,15 @@ using std::vector;
 using std::find;
 using std::remove;
 using std::ofstream;
+using std::unique_ptr;
+using std::make_unique;
 
-extern ofstream* HIT_FILE;
-extern ofstream* MISSES_FILE;
-extern NetworkSocket* GLOBAL_SOCK;
 
-vector<string>* tokenize(const string& line, const char delim)
+unique_ptr<vector<string>> tokenize(const string& line, const char delim)
 {
     string::const_iterator begin = line.begin();
     string::const_iterator end = line.begin();
-    vector<string>* rv = new vector<string>();
+    unique_ptr<vector<string>> rv = make_unique<vector<string>>();
 
     while (begin != line.end()) {
         end = find(begin + 1, line.end(), delim);
@@ -50,18 +49,9 @@ vector<string>* tokenize(const string& line, const char delim)
 }
 
 /* This abomination comes to you courtesy of the Win32 API. */
-void bomb(int code)
+void bomb(uint16_t code)
 {
-    if (GLOBAL_SOCK) {
-        delete GLOBAL_SOCK;
-    }
-    if (HIT_FILE) {
-        delete HIT_FILE;
-    }
-    if (MISSES_FILE) {
-        delete MISSES_FILE;
-    }
-#ifdef WINDOWS
+ #ifdef WINDOWS
     WSACleanup();
     ExitProcess(code);
 #else
