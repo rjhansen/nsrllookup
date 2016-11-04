@@ -27,9 +27,6 @@
 #include <string>
 #include <vector>
 
-void bomb(uint16_t code);
-int query_server_status();
-
 class NetworkError : public std::exception {
 public:
     const char* what() const throw() { return "network error"; }
@@ -43,6 +40,7 @@ public:
     const char* what() const throw() { return "connection refused"; }
 };
 
+void bomb(int code);
 void parse_options(int argc, char** argv);
 std::vector<std::string> tokenize(const std::string& line,
     const char delim = ' ');
