@@ -14,10 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-
 #include "common.hpp"
-#include <array>
 #include <algorithm>
+#include <array>
 #include <boost/program_options.hpp>
 #include <string>
 
@@ -33,6 +32,7 @@ using boost::program_options::store;
 using boost::program_options::parse_command_line;
 using boost::program_options::notify;
 using boost::program_options::value;
+using boost::program_options::error;
 
 extern string SERVER;
 extern bool SCORE_HITS;
@@ -42,37 +42,44 @@ void parse_options(int argc, char** argv)
 {
     int kucount = 0;
     array<char, PATH_MAX> filename_buffer;
-    char* filepath{&filename_buffer[0]};
+    char* filepath{ &filename_buffer[0] };
     fill(filename_buffer.begin(), filename_buffer.end(), 0);
 
     options_description options{ "nsrllookup options" };
-    options.add_options()("help,h", "Show this help screen")
-      ("version,v", "Show version information")
-      ("bug-reports,b", "Show bug reporting information")
-      ("known,k", "Show only RDS hits")
-      ("unknown,u", "Show only RDS misses (default)")
-      ("server,s", value<string>()->default_value("nsrllookup.com"),
-       "nsrlsvr instance to use")
-      ("port,p", value<uint16_t>()->default_value(9120), "port to connect on");
+    options.add_options()("help,h", "Show this help screen")(
+        "version,v", "Show version information")(
+        "bug-reports,b", "Show bug reporting information")(
+        "known,k", "Show only RDS hits")("unknown,u",
+        "Show only RDS misses (default)")(
+        "server,s", value<string>()->default_value("nsrllookup.com"),
+        "nsrlsvr instance to use")(
+        "port,p", value<uint16_t>()->default_value(9120), "port to connect on");
     variables_map vm;
-    store(parse_command_line(argc, argv, options), vm);
-    
+
+    try {
+        store(parse_command_line(argc, argv, options), vm);
+        notify(vm);
+    } catch (error& e) {
+        cout << "Error: " << e.what() << "\n";
+        bomb(-1);
+    }
+
     if (vm.count("help")) {
-      cout << options << "\n";
-      bomb(EXIT_SUCCESS);
+        cout << options << "\n";
+        bomb(EXIT_SUCCESS);
     }
     if (vm.count("version")) {
-      cout << "nsrllookup " << PACKAGE_VERSION << "\n";
-      bomb(EXIT_SUCCESS);
+        cout << "nsrllookup " << PACKAGE_VERSION << "\n";
+        bomb(EXIT_SUCCESS);
     }
     if (vm.count("bug-reports")) {
-      cout << "To file a bug report, visit "
-	"https://github.com/rjhansen/nsrllookup/issues\n";
-      bomb(EXIT_SUCCESS);
+        cout << "To file a bug report, visit "
+                "https://github.com/rjhansen/nsrllookup/issues\n";
+        bomb(EXIT_SUCCESS);
     }
     if (vm.count("known") and vm.count("unknown")) {
-      cout << "Error: the known and unknown flags are mutually exclusive.\n";
-      bomb(-1);
+        cout << "Error: the known and unknown flags are mutually exclusive.\n";
+        bomb(-1);
     }
     SCORE_HITS = vm.count("known") ? true : false;
     SERVER = vm["server"].as<string>();

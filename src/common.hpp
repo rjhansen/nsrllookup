@@ -17,44 +17,37 @@
 #ifndef __COMMON_HPP
 #define __COMMON_HPP
 
-#include <vector>
-#include <string>
-#include <iostream>
-#include <fstream>
 #include <algorithm>
+#include <cstdint>
 #include <cstdlib>
 #include <exception>
+#include <fstream>
+#include <iostream>
 #include <memory>
-#include <cstdint>
+#include <string>
+#include <vector>
 
 void bomb(uint16_t code);
 int query_server_status();
 
 class NetworkError : public std::exception {
 public:
-    const char* what() const throw() {
-        return "network error";
-    }
+    const char* what() const throw() { return "network error"; }
 };
 class EOFException : public std::exception {
 public:
-    const char* what() const throw() {
-        return "eof exception";
-    }
+    const char* what() const throw() { return "eof exception"; }
 };
 class ConnectionRefused : public std::exception {
 public:
-    const char* what() const throw() {
-        return "connection refused";
-    }
+    const char* what() const throw() { return "connection refused"; }
 };
 
 void parse_options(int argc, char** argv);
-std::unique_ptr<std::vector<std::string>> tokenize(const std::string& line,
-						   const char delim = ' ');
+std::vector<std::string> tokenize(const std::string& line,
+    const char delim = ' ');
 void query_server(const std::vector<std::string>& buffer);
 void end_connection();
-
 
 #ifdef _WIN32
 #include "win32.hpp"

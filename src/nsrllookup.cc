@@ -33,55 +33,55 @@ using std::regex_search;
 using std::regex;
 using std::transform;
 
-string SERVER{"nsrllookup.com"};
-bool SCORE_HITS{false}; // score misses
-int PORT{9120};
-NetworkSocket *GLOBAL_SOCK{nullptr};
+string SERVER{ "nsrllookup.com" };
+bool SCORE_HITS{ false }; // score misses
+int PORT{ 9120 };
+NetworkSocket* GLOBAL_SOCK{ nullptr };
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
 #ifdef WINDOWS
-  WSAData wsad;
-  if (0 != WSAStartup(MAKEWORD(2, 0), &wsad)) {
-    std::cerr << "Error: could not initialize Winsock.\n\n"
-                 "You're running a very old version of Windows.  nsrllookup "
-                 "won't work\n"
-                 "on this system.\n";
-    bomb(-1);
-  }
+    WSAData wsad;
+    if (0 != WSAStartup(MAKEWORD(2, 0), &wsad)) {
+        std::cerr << "Error: could not initialize Winsock.\n\n"
+                     "You're running a very old version of Windows.  nsrllookup "
+                     "won't work\n"
+                     "on this system.\n";
+        bomb(-1);
+    }
 #endif
 
-  vector<string> buffer;
-  array<char, 4096> buf;
-  regex valid_line{"^[A-F0-9]{32}", std::regex_constants::icase |
-                                        std::regex_constants::optimize};
+    vector<string> buffer;
+    array<char, 4096> buf;
+    regex valid_line{ "^[A-F0-9]{32}", std::regex_constants::icase | std::regex_constants::optimize };
 
-  parse_options(argc, argv);
+    parse_options(argc, argv);
 
-  try {
-    string line;
-    while (cin) {
-      line = "";
-      getline(cin, line);
-      transform(line.begin(), line.end(), line.begin(), ::toupper);
+    try {
+        string line;
+        while (cin) {
+            line = "";
+            getline(cin, line);
+            transform(line.begin(), line.end(), line.begin(), ::toupper);
 
-      if (regex_search(line, valid_line)) {
-        buffer.push_back(string(line.begin(), line.begin() + 32));
-        if (buffer.size() >= 4096) {
-          query_server(buffer);
-          buffer.clear();
+            if (regex_search(line, valid_line)) {
+                buffer.push_back(string(line.begin(), line.begin() + 32));
+                if (buffer.size() >= 4096) {
+                    query_server(buffer);
+                    buffer.clear();
+                }
+            }
         }
-      }
+    } catch (EOFException&) {
+        // pass: this is entirely expected.  Uh, well, maybe.  It should
+        // actually be removed, I think...
     }
-  } catch (EOFException &) {
-    // pass: this is entirely expected.  Uh, well, maybe.  It should
-    // actually be removed, I think...
-  }
 
-  if (buffer.size()) {
-    query_server(buffer);
-    buffer.clear();
-  }
-  end_connection();
+    if (buffer.size()) {
+        query_server(buffer);
+        buffer.clear();
+    }
+    end_connection();
 
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

@@ -1,4 +1,4 @@
-.Dd August 27, 2014
+.Dd November 4, 2016
 .Dt NSRLLOOKUP 1
 .Os
 .Sh NAME
@@ -10,9 +10,6 @@
 .Op Fl k
 .Op Fl u
 .Op Fl v
-.Op Fl S
-.Op Fl K Ar known_file
-.Op Fl U Ar unknown_file
 .Op Fl s Ar server
 .Op Fl p Ar port
 .Sh DESCRIPTION
@@ -39,14 +36,6 @@ only show matching ("known") files
 only show non-matching ("unknown") files
 .It Fl v
 show version information
-.It Fl S
-attempt to query the server's status (not all servers support queries)
-.It Fl K Ar known-file
-write matching hashes to 
-.Ar known-file
-.It Fl U Ar unknown-file
-write non-matching hashes to
-.Ar unknown-file
 .It Fl s Ar server
 specify an NSRL query server (default: 
 .Ic nsrllookup.com
@@ -73,18 +62,18 @@ To recursively check
 .IC PATH
 against a query server running on
 .Ic nsrllookup.com
-, writing all matches to known.txt and all non-matches to unknown.txt:
+, writing out all matching files:
 .Pp
 md5deep -r 
 .Ic PATH
-| nsrllookup -K known.txt -U unknown.txt
+| nsrllookup -k
 .Pp
 (Please note that you will need the md5sum and/or md5deep tools installed to use these examples.)
 .Sh SEE ALSO
-nsrlsvr(1)
+nsrlsvr (1)
 .Sh ENCODINGS
 nsrllookup tries to be encoding-agnostic.  The Windows-1252 character set and the Latin-1 subset of UTF-8 are known to work fairly well: UTF-16 is known to sometimes make it blow up.
 .Sh BUGS
 nsrllookup doesn't always play nice with UTF-16.
 .Sh AUTHOR
-Robert J. Hansen <rjh@secret-alchemy.com>
+Robert J. Hansen <rob@hansen.engineering>

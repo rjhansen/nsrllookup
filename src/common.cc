@@ -15,9 +15,9 @@
  */
 
 #include "common.hpp"
-#include <vector>
-#include <string>
 #include <algorithm>
+#include <string>
+#include <vector>
 
 using std::string;
 using std::vector;
@@ -27,31 +27,30 @@ using std::ofstream;
 using std::unique_ptr;
 using std::make_unique;
 
-
-unique_ptr<vector<string>> tokenize(const string& line, const char delim)
+vector<string> tokenize(const string& line, const char delim)
 {
-    string::const_iterator begin = line.begin();
-    string::const_iterator end = line.begin();
-    unique_ptr<vector<string>> rv = make_unique<vector<string>>();
+    auto begin{ line.begin() };
+    auto end{ line.begin() };
+    vector<string> rv;
 
     while (begin != line.end()) {
         end = find(begin + 1, line.end(), delim);
-        rv->push_back(string(begin, end));
+        rv.emplace_back(string(begin, end));
         begin = end + (end == line.end() ? 0 : 1);
     }
-    for (size_t idx = 0 ; idx < rv->size() ; ++idx) {
-        string& line = rv->at(idx);
+    for (size_t idx = 0; idx < rv.size(); ++idx) {
+        string& line = rv.at(idx);
         line.erase(remove(line.begin(), line.end(), '\r'), line.end());
         line.erase(remove(line.begin(), line.end(), '\n'), line.end());
     }
-    rv->erase(remove(rv->begin(), rv->end(), ""), rv->end());
+    rv.erase(remove(rv.begin(), rv.end(), ""), rv.end());
     return rv;
 }
 
 /* This abomination comes to you courtesy of the Win32 API. */
 void bomb(uint16_t code)
 {
- #ifdef WINDOWS
+#ifdef WINDOWS
     WSACleanup();
     ExitProcess(code);
 #else
