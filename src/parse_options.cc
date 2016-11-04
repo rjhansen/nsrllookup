@@ -34,10 +34,6 @@ using boost::program_options::notify;
 using boost::program_options::value;
 using boost::program_options::error;
 
-extern string SERVER;
-extern bool SCORE_HITS;
-extern uint16_t PORT;
-
 void parse_options(int argc, char** argv)
 {
     array<char, PATH_MAX> filename_buffer;
