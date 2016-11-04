@@ -21,26 +21,22 @@ using std::vector;
 using std::unique_ptr;
 using std::ofstream;
 
-extern string SERVER;
-extern bool SCORE_HITS;
-extern int PORT;
-
 namespace {
 NetworkSocket sockobj;
 
 class BadHandshake : public std::exception {
 public:
-    const char* what() const throw() { return "bad handshake"; }
+    const char* what() const noexcept { return "bad handshake"; }
 };
 
 class BadQuery : public std::exception {
 public:
-    const char* what() const throw() { return "bad query"; }
+    const char* what() const noexcept { return "bad query"; }
 };
 
 class MismatchedResultSet : public std::exception {
 public:
-    const char* what() const throw() { return "mismatched result set"; }
+    const char* what() const noexcept { return "mismatched result set"; }
 };
 
 void write_output(const vector<string>& buffer, const string& result_line)

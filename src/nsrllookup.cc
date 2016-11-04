@@ -34,9 +34,8 @@ using std::regex;
 using std::transform;
 
 string SERVER{ "nsrllookup.com" };
-bool SCORE_HITS{ false }; // score misses
-int PORT{ 9120 };
-NetworkSocket* GLOBAL_SOCK{ nullptr };
+bool SCORE_HITS{ false };
+uint16_t PORT{ 9120 };
 
 int main(int argc, char* argv[])
 {
@@ -52,15 +51,14 @@ int main(int argc, char* argv[])
 #endif
 
     vector<string> buffer;
-    array<char, 4096> buf;
-    regex valid_line{ "^[A-F0-9]{32}", std::regex_constants::icase | std::regex_constants::optimize };
+    regex valid_line{ "^[A-F0-9]{32}",
+        std::regex_constants::icase | std::regex_constants::optimize };
 
     parse_options(argc, argv);
 
     try {
         string line;
         while (cin) {
-            line = "";
             getline(cin, line);
             transform(line.begin(), line.end(), line.begin(), ::toupper);
 

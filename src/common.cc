@@ -16,6 +16,7 @@
 
 #include "common.hpp"
 #include <algorithm>
+#include <stdnoreturn.h>
 #include <string>
 #include <vector>
 
@@ -39,16 +40,21 @@ vector<string> tokenize(const string& line, const char delim)
         begin = end + (end == line.end() ? 0 : 1);
     }
     for (size_t idx = 0; idx < rv.size(); ++idx) {
-        string& line = rv.at(idx);
-        line.erase(remove(line.begin(), line.end(), '\r'), line.end());
-        line.erase(remove(line.begin(), line.end(), '\n'), line.end());
+        rv.at(idx).erase(remove(rv.at(idx).begin(),
+                             rv.at(idx).end(),
+                             '\r'),
+            rv.at(idx).end());
+        rv.at(idx).erase(remove(rv.at(idx).begin(),
+                             rv.at(idx).end(),
+                             '\n'),
+            rv.at(idx).end());
     }
     rv.erase(remove(rv.begin(), rv.end(), ""), rv.end());
     return rv;
 }
 
 /* This abomination comes to you courtesy of the Win32 API. */
-void bomb(int code)
+noreturn void bomb(int code)
 {
 #ifdef WINDOWS
     WSACleanup();

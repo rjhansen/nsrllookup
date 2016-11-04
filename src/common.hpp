@@ -14,8 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef __COMMON_HPP
-#define __COMMON_HPP
+#ifndef COMMON_HPP
+#define COMMON_HPP
 
 #include <algorithm>
 #include <cstdint>
@@ -29,15 +29,15 @@
 
 class NetworkError : public std::exception {
 public:
-    const char* what() const throw() { return "network error"; }
+    const char* what() const noexcept { return "network error"; }
 };
 class EOFException : public std::exception {
 public:
-    const char* what() const throw() { return "eof exception"; }
+    const char* what() const noexcept { return "eof exception"; }
 };
 class ConnectionRefused : public std::exception {
 public:
-    const char* what() const throw() { return "connection refused"; }
+    const char* what() const noexcept { return "connection refused"; }
 };
 
 void bomb(int code);
@@ -46,6 +46,10 @@ std::vector<std::string> tokenize(const std::string& line,
     const char delim = ' ');
 void query_server(const std::vector<std::string>& buffer);
 void end_connection();
+
+extern std::string SERVER;
+extern bool SCORE_HITS;
+extern uint16_t PORT;
 
 #ifdef _WIN32
 #include "win32.hpp"

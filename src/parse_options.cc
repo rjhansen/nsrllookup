@@ -40,9 +40,7 @@ extern uint16_t PORT;
 
 void parse_options(int argc, char** argv)
 {
-    int kucount = 0;
     array<char, PATH_MAX> filename_buffer;
-    char* filepath{ &filename_buffer[0] };
     fill(filename_buffer.begin(), filename_buffer.end(), 0);
 
     options_description options{ "nsrllookup options" };

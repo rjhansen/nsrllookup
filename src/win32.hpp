@@ -15,8 +15,8 @@
  */
 
 #if _WIN32 || __WIN32__ || __WINDOWS__ || _win32
-#ifndef __WIN32_HPP
-#define __WIN32_HPP
+#ifndef WIN32_HPP
+#define WIN32_HPP
 #define WINDOWS
 
 #undef UNICODE

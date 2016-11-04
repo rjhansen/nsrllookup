@@ -14,8 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef __UNIX_HPP
-#define __UNIX_HPP
+#ifndef UNIX_HPP
+#define UNIX_HPP
 
 #include <netdb.h>
 #include <poll.h>
@@ -57,10 +57,13 @@ public:
 
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_port = htons(port);
-        memcpy((void*)&serv_addr.sin_addr.s_addr, (void*)server->h_addr,
-            server->h_length);
+        memcpy(static_cast<void*>(&serv_addr.sin_addr.s_addr),
+            static_cast<void*>(server->h_addr),
+            static_cast<size_t>(server->h_length));
 
-        if (::connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
+        if (::connect(sock, reinterpret_cast<sockaddr*>(&serv_addr),
+                sizeof(serv_addr))
+            < 0) {
             if (ECONNREFUSED == errno) {
                 throw ConnectionRefused();
             } else {
@@ -78,13 +81,16 @@ public:
         sock = -1;
     }
 
-    virtual ~NetworkSocket() { disconnect(); }
+    ~NetworkSocket() { disconnect(); }
 
     void write(const std::string& line)
     {
         // This has a wacky edge case if you're sending 2**32 bytes AND
         // have a network error.  Yes, it's a bug.
-        if (line.size() != (size_t)send(sock, line.c_str(), line.size(), 0))
+        if (line.size() != static_cast<size_t>(send(sock,
+                               line.c_str(),
+                               line.size(),
+                               0)))
             throw NetworkError();
     }
 
@@ -97,9 +103,9 @@ public:
     std::string read_line()
     {
         pollfd fds = { sock, POLLIN, 0 };
-        int poll_code(poll(&fds, 1, 750));
-        std::string rv("");
-        std::string::iterator iter(std::find(buffer.begin(), buffer.end(), '\n'));
+        int poll_code{ poll(&fds, 1, 750) };
+        std::string rv{ "" };
+        auto iter{ std::find(buffer.begin(), buffer.end(), '\n') };
 
         while (0 == poll_code)
             poll_code = poll(&fds, 1, 750);
@@ -113,10 +119,12 @@ public:
             }
             while (sock != 0 and iter == buffer.end()) {
                 std::vector<char> tmpbuf(8192, '\0');
-                int status = 0;
+                ssize_t status = 0;
 
-                status = recv(sock, (void*)&tmpbuf[0], 8191, 0);
-                if (0 == status) {
+                if (0 == (status = recv(sock,
+                              static_cast<void*>(&tmpbuf[0]),
+                              tmpbuf.size() - 1,
+                              0))) {
                     close(sock);
                     sock = 0;
                 } else if (-1 == status) {
