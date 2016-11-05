@@ -6,12 +6,13 @@
 .Nd command-line interface to NSRL servers
 .Sh SYNOPSIS
 .Nm nsrllookup
+.Op Fl b
 .Op Fl h
 .Op Fl k
+.Op Fl p Ar port
+.Op Fl s Ar server
 .Op Fl u
 .Op Fl v
-.Op Fl s Ar server
-.Op Fl p Ar port
 .Sh DESCRIPTION
 nsrllookup is a tool for interacting with NSRL query servers,
 supporting version 2 of the NSRL query protocol.
@@ -21,41 +22,43 @@ a standalone program.
 .Pp
 By default it attempts to communicate with a server running on
 .Ic nsrllookup.com
-at port 9120.  This may be overruled with the 
+at port 9120.  This may be overruled with the
 .Ar server
 and
 .Ar port
 arguments.
 .Sh OPTIONS
 .Bl -tag -width Ds
+.It Fl b
+show the URL for the bug tracker
 .It Fl h
 print a summary of nsrllookup usage, then exit
 .It Fl k
 only show matching ("known") files
+.It Fl p Ar port
+specify what port to query on (default: 9120)
+.It Fl s Ar server
+specify an NSRL query server (default:
+.Ic nsrllookup.com
+)
 .It Fl u
 only show non-matching ("unknown") files
 .It Fl v
 show version information
-.It Fl s Ar server
-specify an NSRL query server (default: 
-.Ic nsrllookup.com
-)
-.It Fl p Ar port
-specify what port to query on (default: 9120)
 .El
 .Sh EXAMPLES
-To check 
+To check
 .Ic FILENAME
-to see if it's listed in NIST's NSRL RDS, querying against the 
+to see if it's listed in NIST's NSRL RDS, querying against the
 publicly-available
 .Ic nsrllookup.com
 server:
 .Pp
-md5sum 
-.Ic FILENAME 
+md5sum
+.Ic FILENAME
 | nsrllookup -k
 .Pp
-If the hash is present, the output from md5sum will be 
+If the hash is present, the output from md5sum will be
 displayed to standard output: otherwise, it's suppressed.
 .Pp
 To recursively check
@@ -64,7 +67,7 @@ against a query server running on
 .Ic nsrllookup.com
 , writing out all matching files:
 .Pp
-md5deep -r 
+md5deep -r
 .Ic PATH
 | nsrllookup -k
 .Pp
