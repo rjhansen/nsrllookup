@@ -35,7 +35,11 @@ using boost::program_options::error;
 
 void parse_options(int argc, char** argv)
 {
+#ifdef WINDOWS
+    array<char, 260> filename_buffer;
+#else
     array<char, PATH_MAX> filename_buffer;
+#endif
     fill(filename_buffer.begin(), filename_buffer.end(), 0);
 
     options_description options{ "nsrllookup options" };
@@ -70,7 +74,7 @@ void parse_options(int argc, char** argv)
                 "https://github.com/rjhansen/nsrllookup/issues\n";
         bomb(EXIT_SUCCESS);
     }
-    if (vm.count("known") and vm.count("unknown")) {
+    if (vm.count("known") && vm.count("unknown")) {
         cout << "Error: the known and unknown flags are mutually exclusive.\n";
         bomb(-1);
     }

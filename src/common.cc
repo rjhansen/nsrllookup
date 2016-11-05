@@ -15,7 +15,6 @@
 
 #include "common.hpp"
 #include <algorithm>
-#include <stdnoreturn.h>
 #include <string>
 #include <vector>
 

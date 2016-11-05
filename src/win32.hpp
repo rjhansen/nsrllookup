@@ -30,7 +30,6 @@ public:
     NetworkSocket()
         : sock{ INVALID_SOCKET }
         , buffer{ "" }
-        , connected(false)
     {
     }
 
@@ -90,7 +89,7 @@ public:
 
     void write(const std::string& line)
     {
-        if (SOCKET_ERROR == send(sock, line.c_str(), line.size(), 0)) {
+        if (SOCKET_ERROR == send(sock, line.c_str(), static_cast<int>(line.size()), 0)) {
             std::cerr << "Error: couldn't send a packet to the server.\n";
             bomb(0);
         }
@@ -105,41 +104,41 @@ public:
     std::string read_line()
     {
         std::string::iterator siter = std::find(buffer.begin(), buffer.end(), '\n');
-        std::string rv("");
-        int bytes_read(0);
+		std::string rv{ "" };
+		size_t bytes_read{ 0 };
         fd_set fds;
         timeval tv;
-        int sel_call(0);
+		int sel_call{ 0 };
 
         tv.tv_sec = 0;
         tv.tv_usec = 500000;
         FD_ZERO(&fds);
         FD_SET(sock, &fds);
 
-        if (!connected && buffer != "") {
+        if (! isConnected() && buffer != "") {
             rv = buffer;
             rv.erase(std::remove(rv.begin(), rv.end(), '\n'), rv.end());
             rv.erase(std::remove(rv.begin(), rv.end(), '\r'), rv.end());
             buffer = "";
             return rv;
         }
-        if (!connected && buffer == "") {
+        if (! isConnected() && buffer == "") {
             throw EOFException();
         }
 
-        while (connected && siter == buffer.end()) {
+        while (isConnected() && siter == buffer.end()) {
             sel_call = select(0, &fds, NULL, &fds, &tv);
             if (0 == sel_call)
                 continue;
             if (SOCKET_ERROR == sel_call) {
-                connected = false;
+				disconnect();
                 throw NetworkError();
             }
 
             std::fill(temporary_pool.begin(), temporary_pool.end(), 0);
-            bytes_read = recv(sock, &temporary_pool[0], temporary_pool.size(), 0);
+            bytes_read = recv(sock, &temporary_pool[0], static_cast<int>(temporary_pool.size()), 0);
             if (SOCKET_ERROR == bytes_read || 0 == bytes_read) {
-                connected = false;
+				disconnect();
                 break;
             }
             buffer += std::string(&temporary_pool[0], &temporary_pool[0] + bytes_read);
@@ -157,7 +156,6 @@ private:
     SOCKET sock;
     std::string buffer;
     std::array<char, 8192> temporary_pool;
-    bool connected;
 };
 
 #endif
