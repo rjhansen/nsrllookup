@@ -63,15 +63,10 @@ is all you should need to do.
 ### Windows
 
 If you're compiling from a Cygwin or MSYS2 environment, see the UNIX
-instructions above.  If you're doing a native compile, start a Visual
-Studio command prompt.
-
-```
-cmake . -DCMAKE_BUILD_TYPE=Release
-make
-```
-
-... and in the `src` subdirectory you'll have a bouncing baby executable.
+instructions above.  If you're doing a native compile, run `cmake-gui.exe`
+to configure CMake parameters.  In the resulting solution file you'll probably
+have to manually set Boost's include and lib dirs, but it's not hard to get
+it all set up.
 
 ### Cross-compiling
 
