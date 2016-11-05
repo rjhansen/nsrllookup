@@ -53,7 +53,7 @@ You'll need:
 ### UNIX and OS X
 
 ```
-cmake . -DCMAKE_BUILD_TYPE=Release
+cmake -D CMAKE_BUILD_TYPE=Release .
 make
 sudo make install
 ```
@@ -74,7 +74,7 @@ Fedora 24 with the `mingw64` packages installed can cross-compile for
 Windows.
 
 ```
-cmake . -DCMAKE_TOOLCHAIN_FILE=mingw64.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS_RELEASE="-static -static-libgcc -static-libstdc++"
+cmake -D CMAKE_TOOLCHAIN_FILE=mingw64.cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_EXE_LINKER_FLAGS_RELEASE="-static -static-libgcc -static-libstdc++" .
 make
 mingw-strip src/nsrllookup.exe
 ```
