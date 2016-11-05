@@ -1,83 +1,75 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Nsrllookup : ">
+    <title>Nsrllookup by rjhansen</title>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Nsrllookup</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
-
   <body>
+    <div class="wrapper">
+      <header>
+        <h1>Nsrllookup</h1>
+        <p></p>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/rjhansen/nsrllookup">View on GitHub</a>
+        <p class="view"><a href="https://github.com/rjhansen/nsrllookup">View the Project on GitHub <small>rjhansen/nsrllookup</small></a></p>
 
-          <h1 id="project_title">Nsrllookup</h1>
-          <h2 id="project_tagline"></h2>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/rjhansen/nsrllookup/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/rjhansen/nsrllookup/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+        <ul>
+          <li><a href="https://github.com/rjhansen/nsrllookup/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/rjhansen/nsrllookup/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/rjhansen/nsrllookup">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
         <h1>
-<a name="nsrllookup" class="anchor" href="#nsrllookup"><span class="octicon octicon-link"></span></a>nsrllookup</h1>
+<a id="nsrllookup" class="anchor" href="#nsrllookup" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>nsrllookup</h1>
 
-<p>The latest release is 1.2.3, available as <a href="https://github.com/rjhansen/nsrllookup/archive/v1.2.3.tar.gz">source code</a> or as Windows binaries (<a href="http://sixdemonbag.org/nsrlquery/nsrllookup-1.2.3-win32.zip">32-bit</a> and <a href="http://sixdemonbag.org/nsrlquery/nsrllookup-1.2.3-win64.zip">64-bit</a>).</p>
-
-<h2>
-<a name="news" class="anchor" href="#news"><span class="octicon octicon-link"></span></a>News</h2>
-
-<p>nsrllookup depends on the existence of an NSRL lookup server.  For a couple of years Kyrus Technologies provided one, but that's no more.  (No slight on them: thanks, guys, for all the time you supported nsrllookup!)  A new publicly available NSRL lookup server has been stood up at nsrllookup.com.</p>
+<p>The latest release is 1.3.0.  A prebuilt, Authenticode-signed <a href="https://github.com/rjhansen/nsrllookup/releases/download/1.3.0/nsrllookup-1.3-win64.zip">Win64 binary</a> is available.</p>
 
 <h2>
-<a name="whats-nsrllookup" class="anchor" href="#whats-nsrllookup"><span class="octicon octicon-link"></span></a>What's nsrllookup?</h2>
+<a id="news" class="anchor" href="#news" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>News</h2>
 
-<p>NIST publishes a giant compendium of MD5 and SHA-1 hashes of known pieces of software.  This volume, the National Software Reference Library Reference Data Set (NSRL RDS), is invaluable for computer forensics.  Often when faced with a needle-in-a-haystack problem, it's a tremendous help to be able to immediately categorize data into "NIST knows about this" and "it's unknown to NIST."</p>
+<p>1.3 was released on November 5, 2016.  Users shouldn't notice any major differences, but under the hood the codebase has been overhauled for C++14 conformance and the build system has been replaced with a new CMake-based one.</p>
+
+<h2>
+<a id="whats-nsrllookup" class="anchor" href="#whats-nsrllookup" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What's nsrllookup?</h2>
+
+<p>NIST publishes a giant compendium of MD5 hashes of known pieces of software.  This volume, the National Software Reference Library Reference Data Set (NSRL RDS), is invaluable for computer forensics.  Often when faced with a needle-in-a-haystack problem, it's a tremendous help to be able to immediately categorize data into "NIST knows about this" and "it's unknown to NIST."</p>
 
 <p>Unfortunately, the NSRL RDS is a couple of gigs in size and doesn't have any good querying tools.  This is where nsrlsvr and nsrllookup come into play -- or collectively, "the nsrlquery tools."</p>
 
 <h3>
-<a name="nsrlsvr" class="anchor" href="#nsrlsvr"><span class="octicon octicon-link"></span></a>nsrlsvr</h3>
+<a id="nsrlsvr" class="anchor" href="#nsrlsvr" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>nsrlsvr</h3>
 
 <p>nsrlsvr lets a system administrator stand up a server to support NSRL queries.  On top of that, an admin can add additional hashes to the NSRL RDS list.  For instance, if you have a set of images you're particularly interested in finding, you can compute hashes of the images and add them to the dataset.  Now you can query nsrlsvr to find out "is it known to either NIST or our own local corpus?"</p>
 
 <h3>
-<a name="nsrllookup-1" class="anchor" href="#nsrllookup-1"><span class="octicon octicon-link"></span></a>nsrllookup</h3>
+<a id="nsrllookup-1" class="anchor" href="#nsrllookup-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>nsrllookup</h3>
 
 <p>nsrllookup is how end-users interact with nsrlsvr.  It's designed to be a well-behaved command-line application, and works hand-in-glove with tools like <a href="http://md5deep.sourceforge.net">hashdeep</a>.  For instance, to hash everything in /mount/evil-data and compare it against the NSRL RDS using the publicly-accessible nsrlsvr instance at nsrllookup.com, printing out those things that are unknown to NIST:</p>
 
 <p>md5deep -r /mount/evil-data | nsrllookup</p>
 
 <h3>
-<a name="how-do-i-get-help" class="anchor" href="#how-do-i-get-help"><span class="octicon octicon-link"></span></a>How do I get help?</h3>
+<a id="how-do-i-get-help" class="anchor" href="#how-do-i-get-help" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How do I get help?</h3>
 
 <p>nsrllookup --help</p>
 
-<p>I hope you like nsrllookup.  If you have bugs, suggestions or praise, please feel free to <a href="mailto:rjh@sixdemonbag.org?subject=nsrllookup%201.2">email me</a>.</p>
+<p>I hope you like nsrllookup.  If you have bugs, suggestions or praise, please feel free to <a href="mailto:rjh@sixdemonbag.org?subject=nsrllookup%201.3">email me</a>.</p>
       </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Nsrllookup maintained by <a href="https://github.com/rjhansen">rjhansen</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/rjhansen">rjhansen</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>
-
+    <script src="javascripts/scale.fix.js"></script>
     
-
   </body>
 </html>
