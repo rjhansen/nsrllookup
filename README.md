@@ -67,16 +67,3 @@ instructions above.  If you're doing a native compile, run `cmake-gui.exe`
 to configure CMake parameters.  In the resulting solution file you'll probably
 have to manually set Boost's include and lib dirs, but it's not hard to get
 it all set up.
-
-### Cross-compiling
-
-Fedora 24 with the `mingw64` packages installed can cross-compile for
-Windows.
-
-```
-cmake -D CMAKE_TOOLCHAIN_FILE=mingw64.cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_EXE_LINKER_FLAGS_RELEASE="-static -static-libgcc -static-libstdc++" .
-make
-mingw-strip src/nsrllookup.exe
-```
-
-The resulting executable has static linkage against everything but ws2_32, kernel32, and msvcrt.  (Since those are all standard parts of every Windows install, there's really no point in statically linking them.)
