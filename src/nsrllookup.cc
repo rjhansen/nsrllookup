@@ -71,6 +71,6 @@ int main(int argc, char* argv[])
     copy(answers.cbegin(), answers.cend(), ostream_iterator<string>(cout, "\n"));
 #ifdef WINDOWS
     WSACleanup();
-#else
+#endif
     return EXIT_SUCCESS;
 }
