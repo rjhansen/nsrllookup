@@ -1,29 +1,37 @@
-cmake_minimum_required(VERSION 3.5.0)
+cmake_minimum_required(VERSION 3.12)
 project(nsrllookup)
-set(VERSION "1.3")
-set(PACKAGE_VERSION ${VERSION})
 find_package(Boost 1.60.0 REQUIRED COMPONENTS program_options)
 include_directories($Boost_INCLUDE_DIRS)
+
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED OFF)
 set(Boost_USE_STATIC_RUNTIME ON)
 
-if (UNIX)
-  include(GNUInstallDirs)
+set(CMAKE_CXX_STANDARD 14)
+
+add_compile_definitions(PACKAGE_VERSION="1.4")
+add_compile_definitions(PACKAGE_URL="http://rjhansen.github.io/nsrlsvr")
+add_compile_definitions(PACKAGE_BUGREPORT="rjh@sixdemonbag.org")
+
+add_executable(nsrllookup
+        src/common.cc
+        src/common.hpp
+        src/nsrllookup.cc
+        src/parse_options.cc
+        src/query_server.cc
+        src/unix.hpp
+        src/win32.hpp)
+set_property(TARGET nsrllookup PROPERTY CXX_STANDARD 14)
+set_property(TARGET nsrllookup PROPERTY CXX_STANDARD_REQUIRED true)
+target_link_libraries(nsrllookup ${Boost_PROGRAM_OPTIONS_LIBRARY})
+if (WIN32)
+    target_link_libraries(nsrllookup wsock32 ws2_32)
 endif()
 
-add_subdirectory(src)
-add_subdirectory(man1)
+if(MSVC)
+    target_compile_options(nsrllookup PRIVATE /W4 /WX)
+else(MSVC)
+    target_compile_options(nsrllookup PRIVATE -Wall -Wextra -pedantic -Werror)
+endif(MSVC)
 
-set(CPACK_GENERATOR "RPM")
-set(CPACK_RPM_PACKAGE_SUMMARY "A client for forensics triage using NIST's NSRL RDS.")
-set(CPACK_RPM_PACKAGE_NAME "nsrllookup")
-set(CPACK_PACKAGE_NAME "nsrllookup")
-set(CPACK_RPM_PACKAGE_VERSION ${PACKAGE_VERSION})
-set(CPACK_PACKAGE_VERSION ${PACKAGE_VERSION})
-set(CPACK_PACKAGE_RELEASE "1")
-set(CPACK_RPM_PACKAGE_LICENSE "ISC")
-set(CPACK_RPM_PACKAGE_REQUIRES "boost-program-options >= 1.60.0")
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
-set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/share/man /usr/share/man/man1)
-include(CPack)
+install(TARGETS nsrllookup RUNTIME DESTINATION bin)

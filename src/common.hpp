@@ -28,27 +28,37 @@
 
 class NetworkError : public std::exception {
 public:
-    const char* what() const noexcept { return "network error"; }
+    const char* what() const noexcept override { return "network error"; }
 };
 class EOFException : public std::exception {
 public:
-    const char* what() const noexcept { return "eof exception"; }
+    const char* what() const noexcept override { return "eof exception"; }
 };
 class ConnectionRefused : public std::exception {
 public:
-    const char* what() const noexcept { return "connection refused"; }
+    const char* what() const noexcept override { return "connection refused"; }
 };
 
 void bomb(int code);
 void parse_options(int argc, char** argv);
 std::vector<std::string> tokenize(const std::string& line,
-    const char delim = ' ');
-void query_server(const std::vector<std::string>& buffer);
+    char delim = ' ');
+void query_server(const std::vector<std::string>&);
 void end_connection();
 
 extern std::string SERVER;
 extern bool SCORE_HITS;
 extern uint16_t PORT;
+
+template <typename T>
+void query_server(T begin, T end)
+{
+    if (begin == end)
+        return;
+
+    std::vector<std::string> local(begin, end);
+    query_server(local);
+}
 
 #ifdef _WIN32
 #include "win32.hpp"

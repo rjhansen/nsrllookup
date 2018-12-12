@@ -14,28 +14,30 @@
  */
 
 #include "common.hpp"
+#include <regex>
 
 using std::string;
 using std::vector;
 using std::unique_ptr;
 using std::ofstream;
+using std::regex;
 
 namespace {
 NetworkSocket sockobj;
 
 class BadHandshake : public std::exception {
 public:
-    const char* what() const noexcept { return "bad handshake"; }
+    const char* what() const noexcept override { return "bad handshake"; }
 };
 
 class BadQuery : public std::exception {
 public:
-    const char* what() const noexcept { return "bad query"; }
+    const char* what() const noexcept override { return "bad query"; }
 };
 
 class MismatchedResultSet : public std::exception {
 public:
-    const char* what() const noexcept { return "mismatched result set"; }
+    const char* what() const noexcept override { return "mismatched result set"; }
 };
 
 void write_output(const vector<string>& buffer, const string& result_line)
@@ -53,7 +55,7 @@ void write_output(const vector<string>& buffer, const string& result_line)
         throw MismatchedResultSet();
 
     for (size_t idx = 0; idx < buffer.size(); ++idx) {
-        bool hit = results.at(idx) == '1' ? true : false;
+        bool hit = results.at(idx) == '1';
 
         if ((hit && SCORE_HITS) || (!hit && !SCORE_HITS)) {
             std::cout << buffer.at(idx) << "\n";
@@ -75,6 +77,7 @@ void end_connection()
 
 void query_server(const vector<string>& buffer)
 {
+    constexpr size_t MAX_SENT = 512;
     if (buffer.empty())
         return;
 
@@ -83,7 +86,7 @@ void query_server(const vector<string>& buffer)
             sockobj.connect(SERVER, PORT);
             sockobj.write("Version: 2.0\r\n");
             auto tokens{ tokenize(sockobj.read_line()) };
-            if (tokens.size() == 0 || tokens.at(0) != "OK")
+            if (tokens.empty() || tokens.at(0) != "OK")
                 throw BadHandshake();
         } catch (ConnectionRefused&) {
             std::cerr << "Error: connection refused\n";
@@ -95,14 +98,23 @@ void query_server(const vector<string>& buffer)
     }
 
     try {
-        string q{ "query" };
-        for (size_t idx = 0; idx < buffer.size(); ++idx) {
-            auto tokens{ tokenize(buffer.at(idx)) };
-            q += " " + tokens.at(0);
+        auto iter = buffer.cbegin();
+        vector<string> queries(MAX_SENT);
+
+        while (iter != buffer.cend()) {
+            string q{"query"};
+            queries.clear();
+            auto ctr = MAX_SENT;
+            while (iter != buffer.cend() && ctr > 0) {
+                q += " " + *iter;
+                queries.emplace_back(*iter);
+                ++iter;
+                --ctr;
+            }
+            q += "\r\n";
+            sockobj.write(q);
+            write_output(queries, sockobj.read_line());
         }
-        q += "\r\n";
-        sockobj.write(q);
-        write_output(buffer, sockobj.read_line());
     } catch (BadQuery&) {
         std::cerr << "Error: server didn't like our query.\n";
         bomb(-1);

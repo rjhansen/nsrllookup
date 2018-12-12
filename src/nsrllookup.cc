@@ -17,8 +17,10 @@
 #include <array>
 #include <cctype>
 #include <regex>
+#include <set>
 
 using std::array;
+using std::set;
 using std::vector;
 using std::string;
 using std::find;
@@ -32,7 +34,7 @@ using std::regex_search;
 using std::regex;
 using std::transform;
 
-string SERVER{ "nsrllookup.com" };
+string SERVER;
 bool SCORE_HITS{ false };
 uint16_t PORT{ 9120 };
 
@@ -48,36 +50,24 @@ int main(int argc, char* argv[])
         bomb(-1);
     }
 #endif
-
-    vector<string> buffer;
+    SERVER = "nsrllookup.com";
+    set<string> hashes;
     regex valid_line{ "^[A-F0-9]{32}",
         std::regex_constants::icase | std::regex_constants::optimize };
 
     parse_options(argc, argv);
 
-    try {
-        string line;
-        while (cin) {
-            getline(cin, line);
-            transform(line.begin(), line.end(), line.begin(), ::toupper);
-
-            if (regex_search(line, valid_line)) {
-                buffer.push_back(string(line.begin(), line.begin() + 32));
-                if (buffer.size() >= 4096) {
-                    query_server(buffer);
-                    buffer.clear();
-                }
-            }
+    string line;
+    while (cin) {
+        getline(cin, line);
+        transform(line.begin(), line.end(), line.begin(), ::toupper);
+        if (regex_search(line, valid_line)) {
+            hashes.insert(string(line.begin(), line.begin() + 32));
         }
-    } catch (EOFException&) {
-        // pass: this is entirely expected.  Uh, well, maybe.  It should
-        // actually be removed, I think...
     }
 
-    if (buffer.size()) {
-        query_server(buffer);
-        buffer.clear();
-    }
+    query_server(hashes.cbegin(), hashes.cend());
+
     end_connection();
 
     return EXIT_SUCCESS;
