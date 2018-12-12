@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-16, Robert J. Hansen <rob@hansen.engineering>
+/* Copyright (c) 2012-18, Robert J. Hansen <rob@hansen.engineering>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,35 +14,25 @@
  */
 
 #include "common.hpp"
-#include <algorithm>
-#include <array>
 #include <boost/program_options.hpp>
-#include <string>
+#include <iostream>
 
-using std::string;
-using std::ofstream;
-using std::cout;
-using std::cerr;
-using std::array;
-using std::fill;
-using boost::program_options::options_description;
-using boost::program_options::variables_map;
-using boost::program_options::store;
-using boost::program_options::parse_command_line;
-using boost::program_options::notify;
-using boost::program_options::value;
 using boost::program_options::error;
+using boost::program_options::notify;
+using boost::program_options::options_description;
+using boost::program_options::parse_command_line;
+using boost::program_options::store;
+using boost::program_options::value;
+using boost::program_options::variables_map;
+using std::array;
+using std::cerr;
+using std::cout;
+using std::fill;
+using std::string;
 
 void parse_options(int argc, char** argv)
 {
-#ifdef WINDOWS
-    array<char, 260> filename_buffer;
-#else
-    array<char, PATH_MAX> filename_buffer;
-#endif
-    fill(filename_buffer.begin(), filename_buffer.end(), 0);
-
-    options_description options{ "nsrllookup options" };
+    options_description options { "nsrllookup options" };
     options.add_options()("help,h", "Show this help screen")(
         "version,v", "Show version information")(
         "bug-reports,b", "Show bug reporting information")(
@@ -50,7 +40,7 @@ void parse_options(int argc, char** argv)
         "Show only RDS misses (default)")(
         "server,s", value<string>()->default_value("nsrllookup.com"),
         "nsrlsvr instance to use")(
-        "port,p", value<uint16_t>()->default_value(9120), "port to connect on");
+        "port,p", value<string>()->default_value("9120"), "port to connect on");
     variables_map vm;
 
     try {
@@ -70,8 +60,8 @@ void parse_options(int argc, char** argv)
         bomb(EXIT_SUCCESS);
     }
     if (vm.count("bug-reports")) {
-        cout << "To file a bug report, visit "
-                "https://github.com/rjhansen/nsrllookup/issues\n";
+        cout << "To file a bug report, visit " PACKAGE_URL "\n"
+             << "(or email " PACKAGE_BUGREPORT ")\n";
         bomb(EXIT_SUCCESS);
     }
     if (vm.count("known") && vm.count("unknown")) {
@@ -80,5 +70,5 @@ void parse_options(int argc, char** argv)
     }
     SCORE_HITS = vm.count("known") ? true : false;
     SERVER = vm["server"].as<string>();
-    PORT = vm["port"].as<uint16_t>();
+    PORT = vm["port"].as<string>();
 }

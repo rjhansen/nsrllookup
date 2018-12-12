@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-16, Robert J. Hansen <rob@hansen.engineering>
+/* Copyright (c) 2012-18, Robert J. Hansen <rob@hansen.engineering>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,29 +14,23 @@
  */
 
 #include "common.hpp"
-#include <array>
-#include <cctype>
+#include <iostream>
+#include <iterator>
 #include <regex>
-#include <set>
 
-using std::array;
-using std::set;
-using std::vector;
-using std::string;
-using std::find;
-using std::fill;
-using std::remove;
-using std::ofstream;
-
+using std::cerr;
 using std::cin;
-using std::unique_ptr;
-using std::regex_search;
+using std::copy;
+using std::cout;
+using std::ostream_iterator;
 using std::regex;
+using std::regex_search;
+using std::set;
+using std::string;
 using std::transform;
 
-string SERVER;
-bool SCORE_HITS{ false };
-uint16_t PORT{ 9120 };
+string SERVER, PORT;
+bool SCORE_HITS { false };
 
 int main(int argc, char* argv[])
 {
@@ -50,12 +44,17 @@ int main(int argc, char* argv[])
         bomb(-1);
     }
 #endif
-    SERVER = "nsrllookup.com";
     set<string> hashes;
-    regex valid_line{ "^[A-F0-9]{32}",
+    regex valid_line { "^[A-F0-9]{32}",
         std::regex_constants::icase | std::regex_constants::optimize };
+    regex valid_port { "^[0-9]{1,5}$" };
 
     parse_options(argc, argv);
+
+    if (!regex_search(PORT, valid_port) || ::strtol(PORT.c_str(), nullptr, 10) < 0 || ::strtol(PORT.c_str(), nullptr, 10) > 65535) {
+        cerr << "Error: '" << PORT << "' is not a valid port.\n";
+        bomb(-1);
+    }
 
     string line;
     while (cin) {
@@ -66,9 +65,8 @@ int main(int argc, char* argv[])
         }
     }
 
-    query_server(hashes.cbegin(), hashes.cend());
-
-    end_connection();
+    auto answers = query_server(hashes.cbegin(), hashes.cend());
+    copy(answers.cbegin(), answers.cend(), ostream_iterator<string>(cout, "\n"));
 
     return EXIT_SUCCESS;
 }

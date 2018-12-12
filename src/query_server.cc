@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-16, Robert J. Hansen <rob@hansen.engineering>
+/* Copyright (c) 2012-18, Robert J. Hansen <rob@hansen.engineering>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,118 +14,97 @@
  */
 
 #include "common.hpp"
+#include <boost/asio.hpp>
+#include <iostream>
 #include <regex>
+#include <set>
 
+using boost::asio::ip::tcp;
+using std::cerr;
+using std::regex;
+using std::regex_search;
+using std::set;
 using std::string;
 using std::vector;
-using std::unique_ptr;
-using std::ofstream;
-using std::regex;
 
 namespace {
-NetworkSocket sockobj;
+auto resprx = regex("^OK [01]+$");
+boost::asio::io_context iocontext;
+tcp::resolver resolver { iocontext };
+tcp::socket sock { iocontext };
 
-class BadHandshake : public std::exception {
-public:
-    const char* what() const noexcept override { return "bad handshake"; }
-};
-
-class BadQuery : public std::exception {
-public:
-    const char* what() const noexcept override { return "bad query"; }
-};
-
-class MismatchedResultSet : public std::exception {
-public:
-    const char* what() const noexcept override { return "mismatched result set"; }
-};
-
-void write_output(const vector<string>& buffer, const string& result_line)
+std::string readsock()
 {
-    auto tokens{ tokenize(result_line) };
-    if (tokens.empty())
-        return;
-
-    if (tokens.at(0) != "OK") {
-        throw BadQuery();
+    boost::asio::streambuf buf;
+    boost::asio::read_until(sock, buf, "\n");
+    std::string data = boost::asio::buffer_cast<const char*>(buf.data());
+    data.erase(--data.end());
+    if (*(data.end() - 1) == '\r') {
+        data.erase(--data.end());
     }
-    const string& results = tokens.at(1);
-
-    if (buffer.size() != results.size())
-        throw MismatchedResultSet();
-
-    for (size_t idx = 0; idx < buffer.size(); ++idx) {
-        bool hit = results.at(idx) == '1';
-
-        if ((hit && SCORE_HITS) || (!hit && !SCORE_HITS)) {
-            std::cout << buffer.at(idx) << "\n";
-        }
-    }
-}
+    return data;
 }
 
-void end_connection()
+void sendsock(const std::string& str)
 {
-    try {
-        if (sockobj.isConnected()) {
-            sockobj.write("BYE\r\n");
-        }
-    } catch (std::exception&) {
-        // pass: we're closing the connection anyway
-    }
+    const std::string msg = str + "\r\n";
+    boost::asio::write(sock, boost::asio::buffer(msg));
+}
 }
 
-void query_server(const vector<string>& buffer)
+set<string> query_server(const vector<string>& buffer)
 {
     constexpr size_t MAX_SENT = 512;
+    set<string> rv;
     if (buffer.empty())
-        return;
-
-    if (!sockobj.isConnected()) {
-        try {
-            sockobj.connect(SERVER, PORT);
-            sockobj.write("Version: 2.0\r\n");
-            auto tokens{ tokenize(sockobj.read_line()) };
-            if (tokens.empty() || tokens.at(0) != "OK")
-                throw BadHandshake();
-        } catch (ConnectionRefused&) {
-            std::cerr << "Error: connection refused\n";
-            bomb(-1);
-        } catch (BadHandshake&) {
-            std::cerr << "Error: server handshake failed\n";
-            bomb(-1);
-        }
+        return rv;
+    try {
+        boost::asio::connect(sock, resolver.resolve(SERVER, PORT));
+    } catch (boost::system::system_error& e) {
+        cerr << "Could not connect to " << SERVER << " " << PORT << ".\n";
+        bomb(-1);
     }
 
     try {
-        auto iter = buffer.cbegin();
+        sendsock("Version: 2.0");
+        auto resp = readsock();
+        if (resp != "OK") {
+            cerr << "0: " << resp << "\n";
+            bomb(-1);
+        }
+
         vector<string> queries(MAX_SENT);
 
-        while (iter != buffer.cend()) {
-            string q{"query"};
+        for (auto iter = buffer.cbegin(); iter != buffer.cend();) {
+            string q { "query" };
             queries.clear();
-            auto ctr = MAX_SENT;
-            while (iter != buffer.cend() && ctr > 0) {
+            while (iter != buffer.cend() && queries.size() < MAX_SENT) {
                 q += " " + *iter;
                 queries.emplace_back(*iter);
                 ++iter;
-                --ctr;
             }
-            q += "\r\n";
-            sockobj.write(q);
-            write_output(queries, sockobj.read_line());
+
+            sendsock(q);
+            resp = readsock();
+
+            if (!regex_search(resp, resprx) || resp.size() - 3 != queries.size()) {
+                cerr << "Error: malformed response from server";
+                bomb(-1);
+            }
+
+            for (size_t idx = 3; idx < resp.size(); idx += 1) {
+                auto scorechar = SCORE_HITS ? '1' : '0';
+                if (resp.at(idx) == scorechar) {
+                    rv.insert(queries.at(idx - 3));
+                }
+            }
         }
-    } catch (BadQuery&) {
-        std::cerr << "Error: server didn't like our query.\n";
-        bomb(-1);
-    } catch (NetworkError&) {
-        std::cerr << "Error: network failure.\n";
-        bomb(-1);
-    } catch (MismatchedResultSet&) {
-        std::cerr << "Error: mismatched result set.\n";
-        bomb(-1);
-    } catch (std::exception&) {
-        std::cerr << "Error: unknown error (WTF?)\n";
+
+        sock.close();
+        return rv;
+    } catch (boost::system::system_error& e) {
+        cerr << "IO error communicating with " << SERVER << " " << PORT << ".\n";
         bomb(-1);
     }
+    return set<string>();
 }
