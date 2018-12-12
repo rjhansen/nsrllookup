@@ -68,7 +68,7 @@ void parse_options(int argc, char** argv)
         cout << "Error: the known and unknown flags are mutually exclusive.\n";
         bomb(-1);
     }
-    SCORE_HITS = vm.count("known") ? true : false;
+    SCORE_HITS = static_cast<bool>(vm.count("known"));
     SERVER = vm["server"].as<string>();
     PORT = vm["port"].as<string>();
 }

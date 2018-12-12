@@ -26,18 +26,18 @@ using std::regex_search;
 using std::set;
 using std::string;
 using std::vector;
+using boost::asio::streambuf;
+using boost::asio::read_until;
+using boost::asio::write;
+using boost::asio::buffer_cast;
+using boost::asio::buffer;
 
 namespace {
-auto resprx = regex("^OK [01]+$");
-boost::asio::io_context iocontext;
-tcp::resolver resolver { iocontext };
-tcp::socket sock { iocontext };
-
-std::string readsock()
+std::string readsock(tcp::socket& sock)
 {
-    boost::asio::streambuf buf;
-    boost::asio::read_until(sock, buf, "\n");
-    std::string data = boost::asio::buffer_cast<const char*>(buf.data());
+    streambuf buf;
+    read_until(sock, buf, "\n");
+    string data = buffer_cast<const char*>(buf.data());
     data.erase(--data.end());
     if (*(data.end() - 1) == '\r') {
         data.erase(--data.end());
@@ -45,10 +45,10 @@ std::string readsock()
     return data;
 }
 
-void sendsock(const std::string& str)
+void sendsock(tcp::socket& sock, const string& str)
 {
-    const std::string msg = str + "\r\n";
-    boost::asio::write(sock, boost::asio::buffer(msg));
+    const string msg {str + "\r\n"};
+    write(sock, buffer(msg));
 }
 }
 
@@ -56,6 +56,11 @@ set<string> query_server(const vector<string>& buffer)
 {
     constexpr size_t MAX_SENT = 512;
     set<string> rv;
+    auto resprx = regex("^OK [01]+$");
+    boost::asio::io_context iocontext;
+    tcp::resolver resolver { iocontext };
+    tcp::socket sock { iocontext };
+
     if (buffer.empty())
         return rv;
     try {
@@ -66,8 +71,8 @@ set<string> query_server(const vector<string>& buffer)
     }
 
     try {
-        sendsock("Version: 2.0");
-        auto resp = readsock();
+        sendsock(sock, "Version: 2.0");
+        auto resp = readsock(sock);
         if (resp != "OK") {
             cerr << "0: " << resp << "\n";
             bomb(-1);
@@ -84,8 +89,8 @@ set<string> query_server(const vector<string>& buffer)
                 ++iter;
             }
 
-            sendsock(q);
-            resp = readsock();
+            sendsock(sock, q);
+            resp = readsock(sock);
 
             if (!regex_search(resp, resprx) || resp.size() - 3 != queries.size()) {
                 cerr << "Error: malformed response from server";

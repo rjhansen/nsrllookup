@@ -51,7 +51,9 @@ int main(int argc, char* argv[])
 
     parse_options(argc, argv);
 
-    if (!regex_search(PORT, valid_port) || ::strtol(PORT.c_str(), nullptr, 10) < 0 || ::strtol(PORT.c_str(), nullptr, 10) > 65535) {
+    if (!regex_search(PORT, valid_port) ||
+        ::strtol(PORT.c_str(), nullptr, 10) < 0 ||
+        ::strtol(PORT.c_str(), nullptr, 10) > 65535) {
         cerr << "Error: '" << PORT << "' is not a valid port.\n";
         bomb(-1);
     }
@@ -67,6 +69,8 @@ int main(int argc, char* argv[])
 
     auto answers = query_server(hashes.cbegin(), hashes.cend());
     copy(answers.cbegin(), answers.cend(), ostream_iterator<string>(cout, "\n"));
-
+#ifdef WINDOWS
+    WSACleanup();
+#else
     return EXIT_SUCCESS;
 }
