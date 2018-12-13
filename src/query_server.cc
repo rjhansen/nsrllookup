@@ -65,7 +65,7 @@ set<string> query_server(const vector<string>& buffer)
         return rv;
     try {
         boost::asio::connect(sock, resolver.resolve(SERVER, PORT));
-    } catch (boost::system::system_error& e) {
+    } catch (boost::system::system_error&) {
         cerr << "Could not connect to " << SERVER << " " << PORT << ".\n";
         bomb(-1);
     }
@@ -107,7 +107,7 @@ set<string> query_server(const vector<string>& buffer)
 
         sock.close();
         return rv;
-    } catch (boost::system::system_error& e) {
+    } catch (boost::system::system_error&) {
         cerr << "IO error communicating with " << SERVER << " " << PORT << ".\n";
         bomb(-1);
     }

@@ -60,8 +60,8 @@ void parse_options(int argc, char** argv)
         bomb(EXIT_SUCCESS);
     }
     if (vm.count("bug-reports")) {
-        cout << "To file a bug report, visit " PACKAGE_URL "\n"
-             << "(or email " PACKAGE_BUGREPORT ")\n";
+        cout << "To file a bug report, visit " << PACKAGE_URL << "\n"
+             << "(or email " << PACKAGE_BUGREPORT << ")\n";
         bomb(EXIT_SUCCESS);
     }
     if (vm.count("known") && vm.count("unknown")) {
