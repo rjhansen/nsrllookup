@@ -59,12 +59,13 @@ set<string> query_server(const vector<string>& buffer)
     auto resprx = regex("^OK [01]+$");
     boost::asio::io_context iocontext;
     tcp::resolver resolver { iocontext };
+    tcp::resolver::query query(SERVER, PORT);
     tcp::socket sock { iocontext };
 
     if (buffer.empty())
         return rv;
     try {
-        boost::asio::connect(sock, resolver.resolve(SERVER, PORT));
+        boost::asio::connect(sock, resolver.resolve(query));
     } catch (boost::system::system_error&) {
         cerr << "Could not connect to " << SERVER << " " << PORT << ".\n";
         bomb(-1);
