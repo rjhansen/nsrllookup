@@ -1,5 +1,9 @@
 # nsrllookup
 
+## Documentation
+Full documentation is found in the manpage.  Once you've done the
+`make install` dance, `man nsrllookup` will give you the rundown.
+
 ## Licensing
 ISC.  Share and enjoy.
 
@@ -8,9 +12,8 @@ It's a command-line tool that allows you to quickly and efficiently triage
 files by MD5 hashes.
 
 ### Why would I want to do that?
-Digital forensics has a big problem with needles and haystacks.  nsrllookup
-is a tool that can be used to significantly cut down the size of the haystack,
-making it easier to search for needles.
+Digital forensics has a big problem with needles and haystacks.  `nsrllookup`
+can significantly reduce the hay, thus making it easier to find needles.
 
 ## How does it work?
 The National Institute of Standards and Technology (NIST) maintains the
@@ -41,14 +44,26 @@ This would produce two files: `all_hashes.txt` containing the names of
 all files and their hashes, and `rds_misses.txt` containing the hash
 values of those files which did not appear in the NSRL RDS.
 
+### The hash server
+
+`nsrllookup` depends on the existence of a properly configured
+lookup server.  I maintain one at `nsrllookup.com`, and `nsrllookup`
+is configured by default to use it.  _If you're doing high volume
+lookups, please set up your own local server._
+
 ## Building
 
 ### Before you begin
 You'll need:
 
-1. [cmake](http://www.cmake.org) 3.5 or later
-2. A _good_ C++14 compiler.  GCC 5.0 or later, and/or Clang 3.5 and later, should do well.
-3. [boost](http://www.boost.org) 1.60 or later
+1. [cmake](http://www.cmake.org) 3.10 or later
+2. A conforming C++14 compiler.  GCC 5.0 or later, and/or Clang 3.5 and later, should do well.
+3. [boost](http://www.boost.org) 1.65 or later
+
+Most problems people have stem from trying to use GCC 4.8's C++
+compiler.  Although GCC 4.8 claims to have C++14 support, it
+doesn't support enough of the C++14 standard to successfully
+compile nsrllookup.
 
 ### UNIX and OS X
 
