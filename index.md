@@ -1,12 +1,14 @@
 # nsrllookup
 
-The latest release is [1.4.0-1](https://github.com/rjhansen/nsrllookup/archive/1.4.0-1.tar.gz).  
+The latest release is [1.4.1](https://github.com/rjhansen/nsrllookup/archive/1.4.1.tar.gz).  
 
 ## Windows binaries
 
 A prebuilt, Authenticode-signed [Win64 binary](https://github.com/rjhansen/nsrllookup/releases/download/1.4.0-1/nsrllookup-1.4-win64.zip) is available.  (You may need the [MSVC 2015 runtime](https://www.microsoft.com/en-us/download/details.aspx?id=52685) if you don't already have it installed.)
 
 ## News
+
+1.4.1 was released in February 2019.  Users should notice no differences.  Under the hood the code has been tweaked to work better with older versions of `Boost.Asio`, such as those found in Ubuntu 18.04.
 
 1.4 was released in December 2018.  Users should notice few differences, but under the hood the network stack has been replaced with `Boost.Asio` for better performance and reliability.
 
@@ -27,6 +29,6 @@ nsrllookup is how end-users interact with nsrlsvr.  It's designed to be a well-b
 
 ### How do I get help?
 
-`nsrllookup --help`
+`nsrllookup --help` or `man nsrllookup`.
 
 I hope you like nsrllookup.  If you have bugs, suggestions or praise, please feel free to [email me](mailto:rjh@sixdemonbag.org?subject=nsrllookup%201.4.0-1).
