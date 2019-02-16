@@ -57,10 +57,10 @@ set<string> query_server(const vector<string>& buffer)
     constexpr size_t MAX_SENT = 512;
     set<string> rv;
     auto resprx = regex("^OK [01]+$");
-    boost::asio::io_context iocontext;
-    tcp::resolver resolver { iocontext };
+    boost::asio::io_service io_service;
+    tcp::resolver resolver { io_service };
     tcp::resolver::query query(SERVER, PORT);
-    tcp::socket sock { iocontext };
+    tcp::socket sock { io_service };
 
     if (buffer.empty())
         return rv;
