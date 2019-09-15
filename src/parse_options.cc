@@ -30,6 +30,10 @@ using std::cout;
 using std::fill;
 using std::string;
 
+#ifdef WINDOWS
+#define _WIN32_WINNT 0x0601
+#endif
+
 void parse_options(int argc, char** argv)
 {
     options_description options { "nsrllookup options" };
