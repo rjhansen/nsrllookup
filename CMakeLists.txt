@@ -1,9 +1,15 @@
 cmake_minimum_required(VERSION 3.10)
 project(nsrllookup)
-include(GNUInstallDirs)
+
+if (UNIX)
+  include(GNUInstallDirs)
+endif()
+
 find_package(Boost 1.65.0 REQUIRED COMPONENTS program_options system)
 find_package(Threads REQUIRED)
+
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 add_executable(nsrllookup
         src/common.cc src/nsrllookup.cc
@@ -11,13 +17,14 @@ add_executable(nsrllookup
 add_definitions(-DPACKAGE_VERSION="1.4.1"
 	-DPACKAGE_URL="http://rjhansen.github.io/nsrlsvr"
 	-DPACKAGE_BUGREPORT="rob@hansen.engineering")
-include_directories(${Boost_INCLUDE_DIRS})
-set_property(TARGET nsrllookup PROPERTY CXX_STANDARD 14)
-set_property(TARGET nsrllookup PROPERTY CXX_STANDARD_REQUIRED true)
-target_link_libraries(nsrllookup ${Boost_LIBRARIES} Threads::Threads)
+
+target_include_directories(nsrllookup ${Boost_INCLUDE_DIRS})
+target_link_libraries(nsrllookup Boost::program_options Threads::Threads)
 
 if (WIN32)
-    target_link_libraries(nsrllookup wsock32 ws2_32)
+  set(Boost_USE_STATIC_LIBS ON)
+  add_definitions(-DBOOST_ALL_NO_LIB -D_WIN32_WINNT=0x0601 -DBOOST_ALL_DYN_LINK)
+  target_link_libraries(nsrllookup wsock32 ws2_32 Boost::program_options Threads::Threads)
 endif()
 
 if (UNIX)
