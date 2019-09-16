@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-18, Robert J. Hansen <rob@hansen.engineering>
+/* Copyright (c) 2012-19, Robert J. Hansen <rob@hansen.engineering>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,11 +14,11 @@
  */
 
 #include "common.hpp"
+#include <algorithm>
 #include <iostream>
 #include <iterator>
 #include <regex>
 #include <vector>
-#include <algorithm>
 
 using std::cerr;
 using std::cin;
@@ -27,11 +27,11 @@ using std::cout;
 using std::ostream_iterator;
 using std::regex;
 using std::regex_search;
-using std::vector;
+using std::sort;
 using std::string;
 using std::transform;
 using std::unique;
-using std::sort;
+using std::vector;
 
 string SERVER, PORT;
 bool SCORE_HITS { false };
@@ -54,9 +54,14 @@ int main(int argc, char* argv[])
 
     parse_options(argc, argv);
 
-    if (!regex_search(PORT, valid_port) ||
-        ::strtol(PORT.c_str(), nullptr, 10) < 0 ||
-        ::strtol(PORT.c_str(), nullptr, 10) > 65535) {
+    auto NaN = !regex_search(PORT, valid_port);
+    if (NaN) {
+        cerr << "Error: '" << PORT << "' is not a valid port.\n";
+        bomb(-1);
+    }
+
+    auto port = ::strtol(PORT.c_str(), nullptr, 10);
+    if (port < 0 || port > 65535) {
         cerr << "Error: '" << PORT << "' is not a valid port.\n";
         bomb(-1);
     }
@@ -70,8 +75,9 @@ int main(int argc, char* argv[])
         }
     }
 
-	sort(hashes.begin(), hashes.end());
-	hashes.erase(unique(hashes.begin(), hashes.end()), hashes.end());
+    sort(hashes.begin(), hashes.end());
+    hashes.erase(unique(hashes.begin(), hashes.end()), hashes.end());
+
     auto answers = query_server(hashes);
     copy(answers.cbegin(), answers.cend(), ostream_iterator<string>(cout, "\n"));
 #ifdef WINDOWS

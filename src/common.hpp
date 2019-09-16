@@ -16,8 +16,8 @@
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
-#include <vector>
 #include <string>
+#include <vector>
 
 void bomb(int code);
 
