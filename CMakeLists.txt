@@ -53,7 +53,7 @@ find_package(Threads REQUIRED)
 # Miscellaneous compile-time defines.  Nothing special here.
 #
 add_definitions(-DPACKAGE_VERSION="1.4.2"
-                -DPACKAGE_URL="http://rjhansen.github.io/nsrlsvr"
+                -DPACKAGE_URL="https://rjhansen.github.io/nsrlsvr"
                 -DPACKAGE_BUGREPORT="rob@hansen.engineering")
 
 # Define the main target, 'nsrllookup'.
