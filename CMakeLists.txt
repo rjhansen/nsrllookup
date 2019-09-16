@@ -58,10 +58,13 @@ add_definitions(-DPACKAGE_VERSION="1.4.1"
 
 # Define the main target, 'nsrllookup'.
 #
-add_executable(nsrllookup src/common.cc src/nsrllookup.cc 
-  src/parse_options.cc src/query_server.cc)
+add_executable(nsrllookup
+  src/common.cc
+  src/nsrllookup.cc
+  src/parse_options.cc
+  src/query_server.cc)
 target_include_directories(nsrllookup PRIVATE ${Boost_INCLUDE_DIRS} src)
-target_link_libraries(nsrllookup Boost::program_options
+target_link_libraries(nsrllookup Boost::program_options 
   Threads::Threads)
 
 # In the event we're compiling in MSVC, we need to add another
@@ -69,10 +72,11 @@ target_link_libraries(nsrllookup Boost::program_options
 #
 if (MSVC)
   add_definitions(-D_WIN32_WINNT=0x0601)
-  target_link_libraries(nsrllookup wsock32 ws2_32 Boost::disable_autolinking)
+  target_link_libraries(nsrllookup wsock32 ws2_32 
+    Boost::disable_autolinking)
 endif()
 
-# UNIX gets its own special case, in order to make it comply with GNU
+# UNIX gets its own special case in order to make it comply with GNU
 # file layouts.
 #
 if (UNIX)

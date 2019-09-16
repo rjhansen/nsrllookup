@@ -17,6 +17,8 @@
 #include <iostream>
 #include <iterator>
 #include <regex>
+#include <vector>
+#include <algorithm>
 
 using std::cerr;
 using std::cin;
@@ -25,9 +27,11 @@ using std::cout;
 using std::ostream_iterator;
 using std::regex;
 using std::regex_search;
-using std::set;
+using std::vector;
 using std::string;
 using std::transform;
+using std::unique;
+using std::sort;
 
 string SERVER, PORT;
 bool SCORE_HITS { false };
@@ -39,12 +43,11 @@ int main(int argc, char* argv[])
     if (0 != WSAStartup(MAKEWORD(2, 0), &wsad)) {
         std::cerr << "Error: could not initialize Winsock.\n\n"
                      "You're running a very old version of Windows.  nsrllookup "
-                     "won't work\n"
-                     "on this system.\n";
+                     "won't work\non this system.\n";
         bomb(-1);
     }
 #endif
-    set<string> hashes;
+    vector<string> hashes;
     regex valid_line { "^[A-F0-9]{32}",
         std::regex_constants::icase | std::regex_constants::optimize };
     regex valid_port { "^[0-9]{1,5}$" };
@@ -63,11 +66,13 @@ int main(int argc, char* argv[])
         getline(cin, line);
         transform(line.begin(), line.end(), line.begin(), ::toupper);
         if (regex_search(line, valid_line)) {
-            hashes.insert(string(line.begin(), line.begin() + 32));
+            hashes.emplace_back(string(line.begin(), line.begin() + 32));
         }
     }
 
-    auto answers = query_server(hashes.cbegin(), hashes.cend());
+	sort(hashes.begin(), hashes.end());
+	hashes.erase(unique(hashes.begin(), hashes.end()), hashes.end());
+    auto answers = query_server(hashes);
     copy(answers.cbegin(), answers.cend(), ostream_iterator<string>(cout, "\n"));
 #ifdef WINDOWS
     WSACleanup();

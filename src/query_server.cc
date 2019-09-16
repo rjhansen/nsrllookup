@@ -14,103 +14,98 @@
  */
 
 #include "common.hpp"
+#include <strstream>
+#include <algorithm>
 #include <boost/asio.hpp>
 #include <iostream>
 #include <regex>
-#include <set>
+#include <iterator>
+#include <exception>
+
 
 using boost::asio::ip::tcp;
 using std::cerr;
 using std::regex;
 using std::regex_search;
-using std::set;
 using std::string;
 using std::vector;
-using boost::asio::streambuf;
-using boost::asio::read_until;
-using boost::asio::write;
-using boost::asio::buffer_cast;
-using boost::asio::buffer;
+using std::getline;
+using std::stringstream;
+using std::min;
+using std::ostream_iterator;
+using std::copy;
+using std::sort;
+using std::unique;
 
 namespace {
-std::string readsock(tcp::socket& sock)
-{
-    streambuf buf;
-    read_until(sock, buf, "\n");
-    string data = buffer_cast<const char*>(buf.data());
-    data.erase(--data.end());
-    if (*(data.end() - 1) == '\r') {
-        data.erase(--data.end());
-    }
-    return data;
+	void trim(string& line) {
+		if (line.size() == 0) return;
+
+		auto end_ws = line.find_last_not_of("\t\n\v\f\r ");
+		if (end_ws != string::npos) {
+			line.erase(end_ws + 1);
+		}
+		auto front_ws = line.find_first_not_of("\t\n\v\f\r ");
+		if (front_ws > 0) {
+			line.erase(0, front_ws);
+		}
+	}
 }
 
-void sendsock(tcp::socket& sock, const string& str)
-{
-    const string msg {str + "\r\n"};
-    write(sock, buffer(msg));
-}
-}
-
-set<string> query_server(const vector<string>& buffer)
+vector<string> query_server(const vector<string>& hashes)
 {
     constexpr size_t MAX_SENT = 512;
-    set<string> rv;
+	const auto scorechar = SCORE_HITS ? '1' : '0';
+	size_t hashidx = 0;
+    vector<string> rv;
     auto resprx = regex("^OK [01]+$");
-    boost::asio::io_service io_service;
-    tcp::resolver resolver { io_service };
-    tcp::resolver::query query(SERVER, PORT);
-    tcp::socket sock { io_service };
+	string response;
 
-    if (buffer.empty())
-        return rv;
-    try {
-        boost::asio::connect(sock, resolver.resolve(query));
-    } catch (boost::system::system_error&) {
-        cerr << "Could not connect to " << SERVER << " " << PORT << ".\n";
-        bomb(-1);
-    }
+	try {
+		boost::asio::ip::tcp::iostream stream(SERVER, PORT);
+		if (! stream) {
+			cerr << "Could not connect to " << SERVER << " " << PORT << ".\n";
+			bomb(-1);
+		}
 
-    try {
-        sendsock(sock, "Version: 2.0");
-        auto resp = readsock(sock);
-        if (resp != "OK") {
-            cerr << "0: " << resp << "\n";
+		stream << "Version: 2.0\r\n";
+		getline(stream, response);
+		trim(response);
+        if (response != "OK") {
+            cerr << "Malformed response from server: " << response << "\n";
             bomb(-1);
         }
 
-        vector<string> queries(MAX_SENT);
+		while (hashidx < hashes.size()) {
+			stringstream buf;
+			auto bufiter = ostream_iterator<string>(buf, " ");
+			auto end = hashidx + min(MAX_SENT, (hashes.size() - hashidx));
 
-        for (auto iter = buffer.cbegin(); iter != buffer.cend();) {
-            string q { "query" };
-            queries.clear();
-            while (iter != buffer.cend() && queries.size() < MAX_SENT) {
-                q += " " + *iter;
-                queries.emplace_back(*iter);
-                ++iter;
-            }
+			// Form and send the query, remembering to trim whitespace.
+			buf << "query ";
+			copy(hashes.cbegin() + hashidx, hashes.cbegin() + end, bufiter);
+			auto query = buf.str();
+			trim(query);
+			stream << query << "\r\n";
 
-            sendsock(sock, q);
-            resp = readsock(sock);
-
-            if (!regex_search(resp, resprx) || resp.size() - 3 != queries.size()) {
-                cerr << "Error: malformed response from server";
-                bomb(-1);
-            }
-
-            for (size_t idx = 3; idx < resp.size(); idx += 1) {
-                auto scorechar = SCORE_HITS ? '1' : '0';
-                if (resp.at(idx) == scorechar) {
-                    rv.insert(queries.at(idx - 3));
-                }
-            }
-        }
-
-        sock.close();
+			// Receive and walk down the response.
+			getline(stream, response);
+			if (!regex_search(response, resprx)) {
+				cerr << "Error: malformed response from server";
+				bomb(-1);
+			}
+			for (size_t respidx = 3; respidx < response.size(); respidx += 1) {
+				if (response.at(respidx) == scorechar)
+					rv.emplace_back(hashes.at(hashidx + (respidx - 3)));
+			}
+			hashidx = end;
+		}
+		rv.erase(unique(rv.begin(), rv.end()), rv.end());
+		sort(rv.begin(), rv.end());
         return rv;
-    } catch (boost::system::system_error&) {
+    } catch (std::exception&) {
         cerr << "IO error communicating with " << SERVER << " " << PORT << ".\n";
         bomb(-1);
     }
-    return set<string>();
+    return vector<string>();
 }
