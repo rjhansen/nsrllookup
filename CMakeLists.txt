@@ -10,8 +10,8 @@
 # the minimum version, and uncomment-out the next line.    #
 ############################################################
 
-# cmake_minimum_required(VERSION 3.15)
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
+# cmake_minimum_required(VERSION 3.10)
 
 ############################################################
 #                                                          #
@@ -47,7 +47,7 @@ endif()
 # have been set.  Don't do this before you set all your Boost_*
 # variables.
 #
-find_package(Boost 1.65.0 REQUIRED COMPONENTS program_options system filesystem)
+find_package(Boost 1.65.0 REQUIRED COMPONENTS program_options system)
 find_package(Threads REQUIRED)
 
 # Miscellaneous compile-time defines.  Nothing special here.
@@ -64,7 +64,7 @@ add_executable(nsrllookup
   src/parse_options.cc
   src/query_server.cc)
 target_include_directories(nsrllookup PRIVATE ${Boost_INCLUDE_DIRS} src)
-target_link_libraries(nsrllookup ${Boost_LIBRARIES} 
+target_link_libraries(nsrllookup Boost::program_options Boost::system
   Threads::Threads)
 
 # In the event we're compiling in MSVC, we need to add another
