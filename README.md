@@ -7,7 +7,7 @@ It's a command-line tool that allows you to quickly and efficiently triage files
 Digital forensics has a big problem with needles and haystacks.  `nsrllookup` can significantly reduce the hay, thus making it easier to find needles.
 
 ## Can I get a prebuilt x64 Windows binary for it?
-[Sure.](https://github.com/rjhansen/nsrllookup/releases/download/1.4.1/nsrllookup-1.4.1-x64.zip)
+[Sure.](https://github.com/rjhansen/nsrllookup/releases/download/1.4.2/nsrllookup-1.4.2-win64.zip)
 
 ## How does it work?
 The National Institute of Standards and Technology (NIST) maintains the National Software Reference Library (NSRL).  The NSRL is a library of every major piece of software released in the world dating back more than twenty years.
@@ -45,26 +45,12 @@ You'll need:
 * [boost](http://www.boost.org) 1.65 or later.  Windows users can get precompiled binaries from [Sourceforge](https://sourceforge.net/projects/boost/files/boost-binaries/), but see below.
 
 ### Windows
-**Begin by editing the CMakeLists.txt file.**  Open it in a text editor and follow the instructions in it.  You'll need to change the CMake version check to require 3.15, and comment out three lines of code immediately beneath it.  It's not hard.
+1. Begin by editing the CMakeLists.txt file.**  Open it in a text editor and follow the instructions in it.  You'll need to change the CMake version check to require 3.15, and comment out three lines of code immediately beneath it.  It's not hard.
+2. Next: be careful to get the correct compiler and architecture for Boost.  Visual Studio 2017's internal version number is "14.1", and 2019's is "14.2".  So, for instance, if you want to download the binaries built for Visual Studio 2019 on x64, you'd download something like `boost_1_71_0-msvc-14.2-64.exe`.
+3. Once you have Boost installed, open a Visual Studio development console.  Visual Studio offers two of them, one for 32-bit and one for 64-bit, so make sure to open the correct one.  `cd` into wherever you uncompressed `nsrllookup` and do this dance:
 
-Next: be careful to get the correct compiler and architecture for Boost.  Visual Studio 2017's internal version number is "14.1", and 2019's is "14.2".  So, for instance, if you want to download the binaries built for Visual Studio 2019 on x64, you'd download something like `boost_1_71_0-msvc-14.2-64.exe`.
-
-Once you have Boost installed, open a Visual Studio development console.  Visual Studio offers two of them, one for 32-bit and one for 64-bit, so make sure to open the correct one.  `cd` into wherever you uncompressed `nsrllookup` and do this dance:
-
-**To build within the Visual Studio IDE:**
-
-```
-"\path\to\cmake.exe" . -DBOOST_ROOT=\path\to\Boost
-```
-
-Once CMake runs you'll have a Visual Studio solution file, `nsrllookup.sln`.  Double-click on that to open `nsrllookup` in Visual Studio, where you can hack on it to your heart's content.
-
-**To build at the command-line:**
-
-```
-"\path\to\cmake.exe" . -DBOOST_ROOT=\path\to\Boost -G "NMake Makefiles"
-nmake
-```
+   1. **To build within the Visual Studio IDE:** `"\path\to\cmake.exe" . -DBOOST_ROOT=\path\to\Boost` will create a Visual Studio solution file, `nsrllookup.sln`.  Double-click on that to open `nsrllookup` in Visual Studio, where you can hack on it to your heart's content.
+   2. **To build at the command-line:** `"\path\to\cmake.exe" . -DBOOST_ROOT=\path\to\Boost -G "NMake Makefiles"` and then `nmake`.
 
 ### UNIX and OS X
 It should be a simple process.
