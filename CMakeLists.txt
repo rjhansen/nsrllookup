@@ -2,16 +2,18 @@
 # READ ME CLOSELY! ### READ ME CLOSELY! # READ ME CLOSELY! #
 ############################################################
 #                                                          #
-# CMake *only* requires version 3.15 when compiling under  #
-# the Microsoft Visual Studio toolchain.  If you're        #
-# compiling on Linux or OS X, or you're using a GNU        #
-# toolchain on Windows, you can edit this file to use an   #
-# older CMake.  Comment out the current line specifying    #
-# the minimum version, and uncomment-out the next line.    #
+# To compile on Windows requires CMake 3.15 or later, as   #
+# well as changing the next line from "VERSION 3.05" to    #
+# "VERSION 3.15".  Then comment out the next if-endif      #
+# block and recompile.                                     #
+#                                                          #
 ############################################################
 
-cmake_minimum_required(VERSION 3.15)
-# cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.05)
+
+if (MSVC)
+  message(FATAL_ERROR "You need to edit CMakeLists.txt!")
+endif()
 
 ############################################################
 #                                                          #
