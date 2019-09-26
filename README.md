@@ -17,7 +17,6 @@ NIST also publishes MD5 hashes of every file in the NSRL.  This is called the Re
 When looking at an unknown file, a good place to begin is to compute its MD5 hash and compare it against the RDS.  If the hash value is found in the RDS, your file is probably boring.  (At the very least, it's commonplace enough to have an RDS entry.)  This means your file is probably hay and not a needle.
 
 ## No, I mean, _how does it work?_
-
 Oh!  Usage.  Sure, that.
 
 Say you're using [md5deep](https://github.com/jessek/hashdeep/) to compute the hashes of a large collection of files.  To get a list of files that do _not_ match the RDS, you could do the following:
@@ -30,16 +29,14 @@ nsrllookup < all_hashes.txt > rds_misses.txt
 This would produce two files: `all_hashes.txt` containing the names of all files and their hashes, and `rds_misses.txt` containing the hash values of those files which did not appear in the NSRL RDS.
 
 ## The hash server
-
 `nsrllookup` depends on the existence of a properly configured lookup server.  I maintain one at `nsrllookup.com`, and `nsrllookup` is configured by default to use it.  _If you're doing high volume lookups, please set up your own local server._
 
 ## How do I build it?
-
 You'll need:
 
 * [cmake](http://www.cmake.org)
     - Windows: 3.15 or later
-    - UNIX: 3.10 or later
+    - UNIX: 3.05 or later
 * A conforming C++14 compiler.  Compilers known to work well include:
     - Visual Studio 2017
     - Visual Studio 2019
@@ -48,12 +45,14 @@ You'll need:
 * [boost](http://www.boost.org) 1.65 or later.  Windows users can get precompiled binaries from [Sourceforge](https://sourceforge.net/projects/boost/files/boost-binaries/), but see below.
 
 ### Windows
+**Begin by editing the CMakeLists.txt file.**  Open it in a text editor and follow the instructions in it.  You'll need to change the CMake version check to require 3.15, and comment out three lines of code immediately beneath it.  It's not hard.
 
-On Windows, please be careful to get the correct compiler and architecture for Boost.  Visual Studio 2017's internal version number is "14.1", and 2019's is "14.2".  So, for instance, if you want to download the binaries built for Visual Studio 2019 on x64, you'd download something like `boost_1_71_0-msvc-14.2-64.exe`.
+Next: be careful to get the correct compiler and architecture for Boost.  Visual Studio 2017's internal version number is "14.1", and 2019's is "14.2".  So, for instance, if you want to download the binaries built for Visual Studio 2019 on x64, you'd download something like `boost_1_71_0-msvc-14.2-64.exe`.
 
 Once you have Boost installed, open a Visual Studio development console.  Visual Studio offers two of them, one for 32-bit and one for 64-bit, so make sure to open the correct one.  `cd` into wherever you uncompressed `nsrllookup` and do this dance:
 
 **To build within the Visual Studio IDE:**
+
 ```
 "\path\to\cmake.exe" . -DBOOST_ROOT=\path\to\Boost
 ```
@@ -68,22 +67,7 @@ nmake
 ```
 
 ### UNIX and OS X
-
-The CMake build script pretends to need 3.15, but it really only needs 3.10 or so.  If you're running an older version of CMake, start by opening up `CMakeLists.txt` and look for these two lines:
-
-```
-cmake_required_version(3.15)
-# cmake_required_version(3.10)
-```
-
-Comment the one out and uncomment the other, so it appears to be:
-
-```
-# cmake_required_version(3.15)
-cmake_required_version(3.10)
-```
-
-At that point it should be just a simple process.
+It should be a simple process.
 
 ```
 cmake .
