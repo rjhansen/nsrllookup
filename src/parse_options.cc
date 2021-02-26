@@ -16,6 +16,7 @@
 #include "common.hpp"
 #include <boost/program_options.hpp>
 #include <iostream>
+#include <regex>
 
 using boost::program_options::error;
 using boost::program_options::notify;
@@ -29,14 +30,14 @@ using std::cerr;
 using std::cout;
 using std::fill;
 using std::string;
-
-#ifdef WINDOWS
-#define _WIN32_WINNT 0x0601
-#endif
+using std::regex;
+using std::regex_search;
 
 void parse_options(int argc, char** argv)
 {
+    const regex valid_port{ "^[0-9]{1,5}$" };
     options_description options { "nsrllookup options" };
+	
     options.add_options()("help,h", "Show this help screen")(
         "version,v", "Show version information")(
         "bug-reports,b", "Show bug reporting information")(
@@ -60,19 +61,31 @@ void parse_options(int argc, char** argv)
         bomb(EXIT_SUCCESS);
     }
     if (vm.count("version")) {
-        cout << "nsrllookup " << PACKAGE_VERSION << "\n";
+        cout << "nsrllookup 1.4.2\n";
         bomb(EXIT_SUCCESS);
     }
     if (vm.count("bug-reports")) {
-        cout << "To file a bug report, visit " << PACKAGE_URL << "\n"
-             << "(or email " << PACKAGE_BUGREPORT << ")\n";
+        cout << "To file a bug report, visit https://github.io/rjhansen/nsrllookup"
+             << " (or email rob@hansen.engineering)\n";
         bomb(EXIT_SUCCESS);
     }
     if (vm.count("known") && vm.count("unknown")) {
         cout << "Error: the known and unknown flags are mutually exclusive.\n";
         bomb(-1);
     }
+	
     SCORE_HITS = static_cast<bool>(vm.count("known"));
     SERVER = vm["server"].as<string>();
     PORT = vm["port"].as<string>();
+
+    if (!regex_search(PORT, valid_port)) {
+        cerr << "Error: '" << PORT << "' is not a valid port.\n";
+        bomb(-1);
+    }
+
+    const auto port = ::strtol(PORT.c_str(), nullptr, 10);
+    if (port < 0 || port > 65535) {
+        cerr << "Error: '" << PORT << "' is not a valid port.\n";
+        bomb(-1);
+    }
 }

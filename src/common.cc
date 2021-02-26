@@ -15,10 +15,14 @@
 
 #include "common.hpp"
 
+#if WINDOWS || WIN32
+#include "winsock.h"
+#endif
+
 /* This abomination comes to you courtesy of the Win32 API. */
 void bomb(int code)
 {
-#ifdef WINDOWS
+#if WINDOWS || WIN32
     WSACleanup();
     ExitProcess(code);
 #else

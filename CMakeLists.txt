@@ -1,19 +1,4 @@
-############################################################
-# READ ME CLOSELY! ### READ ME CLOSELY! # READ ME CLOSELY! #
-############################################################
-#                                                          #
-# To compile on Windows requires CMake 3.15 or later, as   #
-# well as changing the next line from "VERSION 3.05" to    #
-# "VERSION 3.15".  Then comment out the next if-endif      #
-# block and recompile.                                     #
-#                                                          #
-############################################################
-
-cmake_minimum_required(VERSION 3.05)
-
-if (MSVC)
-  message(FATAL_ERROR "You need to edit CMakeLists.txt!")
-endif()
+cmake_minimum_required(VERSION 3.15)
 
 ############################################################
 #                                                          #
@@ -36,13 +21,17 @@ set(MAN_NAMES man1/nsrllookup.1)
 # expect users to keep track of all those DLLs for what's meant to be
 # a self-contained tool.)
 #
-if (MSVC)
+if(MSVC)
   set(Boost_USE_STATIC_LIBS ON)
   set(Boost_USE_DEBUG_LIBS OFF)
   set(Boost_USE_RELEASE_LIBS ON)
   set(Boost_USE_MULTITHREADED ON)
   set(Boost_USE_STATIC_RUNTIME ON)
-  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
+  add_compile_options(
+      $<$<CONFIG:>:/MT>
+      $<$<CONFIG:Debug>:/MTd>
+      $<$<CONFIG:Release>:/MT>
+  )
 endif()
 
 # Acquire the necessary packages, now that the necessary Boost flags

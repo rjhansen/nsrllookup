@@ -19,26 +19,28 @@
 #include <iterator>
 #include <regex>
 #include <vector>
+#if WINDOWS | WIN32
+#include "winsock.h"
+#endif
 
 using std::cerr;
 using std::cin;
 using std::copy;
 using std::cout;
 using std::ostream_iterator;
-using std::regex;
-using std::regex_search;
 using std::sort;
 using std::string;
 using std::transform;
 using std::unique;
 using std::vector;
+using std::regex;
 
 string SERVER, PORT;
 bool SCORE_HITS { false };
 
 int main(int argc, char* argv[])
 {
-#ifdef WINDOWS
+#if WINDOWS | WIN32
     WSAData wsad;
     if (0 != WSAStartup(MAKEWORD(2, 0), &wsad)) {
         std::cerr << "Error: could not initialize Winsock.\n\n"
@@ -48,23 +50,10 @@ int main(int argc, char* argv[])
     }
 #endif
     vector<string> hashes;
-    regex valid_line { "^[A-F0-9]{32}",
-        std::regex_constants::icase | std::regex_constants::optimize };
-    regex valid_port { "^[0-9]{1,5}$" };
-
+    const regex valid_line{ "^[A-F0-9]{32}",
+		std::regex_constants::icase | std::regex_constants::optimize };
+	
     parse_options(argc, argv);
-
-    auto NaN = !regex_search(PORT, valid_port);
-    if (NaN) {
-        cerr << "Error: '" << PORT << "' is not a valid port.\n";
-        bomb(-1);
-    }
-
-    auto port = ::strtol(PORT.c_str(), nullptr, 10);
-    if (port < 0 || port > 65535) {
-        cerr << "Error: '" << PORT << "' is not a valid port.\n";
-        bomb(-1);
-    }
 
     string line;
     while (cin) {
@@ -80,7 +69,7 @@ int main(int argc, char* argv[])
 
     auto answers = query_server(hashes);
     copy(answers.cbegin(), answers.cend(), ostream_iterator<string>(cout, "\n"));
-#ifdef WINDOWS
+#if WINDOWS | WIN32
     WSACleanup();
 #endif
     return EXIT_SUCCESS;
